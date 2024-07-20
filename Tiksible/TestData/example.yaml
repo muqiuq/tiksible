@@ -1,0 +1,11 @@
+- name: "Set IP"
+  configs:
+   - /ip/address:
+       address: 192.168.10.1/24
+       interface: ether2
+   - /ip/address:
+       address: 192.168.11.1/24
+       interface: ether2   
+   - /ip/address:
+       address: 192.168.12.1/24
+       interface: ether3
