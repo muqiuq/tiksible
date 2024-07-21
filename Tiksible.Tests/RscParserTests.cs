@@ -68,6 +68,22 @@ namespace Tiksible.Tests
         }
 
         [TestMethod]
+        public void ParseTest2()
+        {
+            var statements = RosRscParser.Parse(TestData.RscFile3);
+            var expectedLines = TestData.RscFile3ExpectedResult.Replace("\r", "").Split("\n");
+
+            var exportedLines = statements.Export();
+
+            Assert.AreEqual(expectedLines.Length, exportedLines.Length);
+
+            for (int a = 0; a < expectedLines.Length; a++)
+            {
+                Assert.AreEqual(expectedLines[a], exportedLines[a]);
+            }
+        }
+
+        [TestMethod]
         public void ComparisonTest1()
         {
             var statementLeft = RosRscParser.Parse(TestData.RscFile1Variant1);

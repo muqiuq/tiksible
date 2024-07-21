@@ -31,7 +31,8 @@ namespace Tiksible
                 {
                     (new InitHandler(configStorage)).GetCommand(),
                     new BackupHandler(configStorage).GetCommand(),
-                    new RunHandler(configStorage).GetCommand()
+                    new RunHandler(configStorage).GetCommand(),
+                    new ApplyHandler(configStorage).GetCommand()
                 };
 
                 return rootCommand.InvokeAsync(args).Result;

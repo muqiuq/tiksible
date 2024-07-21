@@ -1,4 +1,5 @@
-﻿using Tiksible;
+﻿using Scriban;
+using Tiksible;
 using Tiksible.Models;
 using Tiksible.Theater;
 using Tiksible.Theater.Playbooks;
@@ -12,36 +13,45 @@ namespace DevConsole
     {
         static void Main(string[] args)
         {
+            var exampleFile = File.ReadAllText("TestData/01_example.rsc");
+
+            var template = Template.Parse(exampleFile);
+
+            var result = template.Render();
+
+            Console.WriteLine(result);
+
+
             //var connectionInfo = new ConnectionInfo("192.168.23.162",
             //    "admin", new PasswordAuthenticationMethod("admin", "admin"));
 
-            var sshConInfo =
-                SshConnectionInfoFactory.CreateUserNamePasswordConnectionInfo("192.168.23.162", "admin", "admin");
+            //var sshConInfo =
+            //    SshConnectionInfoFactory.CreateUserNamePasswordConnectionInfo("192.168.23.162", "admin", "admin");
 
-            var playbookExport = new PlaybookRunner(sshConInfo, new ExportPlaybook());
+            //var playbookExport = new PlaybookRunner(sshConInfo, new ExportPlaybook());
 
-            playbookExport.Run();
+            //playbookExport.Run();
 
-            if (!playbookExport.IsSuccess())
-            {
-                Console.WriteLine("export failed");
-                return;
-            }
+            //if (!playbookExport.IsSuccess())
+            //{
+            //    Console.WriteLine("export failed");
+            //    return;
+            //}
 
 
-            File.WriteAllText($"{sshConInfo.HostName}.rsc", playbookExport.Artifacts["config"]);
+            //File.WriteAllText($"{sshConInfo.HostName}.rsc", playbookExport.Artifacts["config"]);
 
-            var playbookBackup = new PlaybookRunner(sshConInfo, new BackupPlaybook());
+            //var playbookBackup = new PlaybookRunner(sshConInfo, new BackupPlaybook());
 
-            playbookBackup.Run();
+            //playbookBackup.Run();
 
-            if (!playbookExport.IsSuccess())
-            {
-                Console.WriteLine("backup failed");
-                return;
-            }
+            //if (!playbookExport.IsSuccess())
+            //{
+            //    Console.WriteLine("backup failed");
+            //    return;
+            //}
 
-            File.WriteAllBytes($"{sshConInfo.HostName}.backup", playbookBackup.Files[BackupPlaybook.TmpBackupFileName]);
+            //File.WriteAllBytes($"{sshConInfo.HostName}.backup", playbookBackup.Files[BackupPlaybook.TmpBackupFileName]);
 
 
 

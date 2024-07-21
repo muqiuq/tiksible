@@ -59,12 +59,10 @@ namespace Tiksible.Services
                     case ParserState.NONE when ch == '/':
                         c = ParserState.PATH;
                         break;
-                    case ParserState.COMMENT when ch == '\n':
+                    case ParserState.NONE when ch == '\n':
                         buffer = "";
-                        c = ParserState.NONE;
                         break;
-                    case ParserState.PATH when ch == '\n':
-                        path = buffer;
+                    case ParserState.COMMENT when ch == '\n':
                         buffer = "";
                         c = ParserState.NONE;
                         break;
@@ -80,6 +78,11 @@ namespace Tiksible.Services
                         c = ParserState.STATEMENT;
                         commandType = buffer.Trim();
                         buffer = "";
+                        break;
+                    case ParserState.PATH when ch == '\n':
+                        path = buffer;
+                        buffer = "";
+                        c = ParserState.NONE;
                         break;
                     case ParserState.STATEMENT when ch == '[':
                         c = ParserState.STATEMENT_CONDITION;

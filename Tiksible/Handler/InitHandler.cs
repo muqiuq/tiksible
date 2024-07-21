@@ -22,24 +22,28 @@ namespace Tiksible.Handler
         {
             var initCommand = new Command("init", "init project");
 
-            AddCredHostsDefaultArgument(initCommand, out var credOption, out var hostsOption);
+            AddCredHostsDefaultArgument(initCommand, out var credOption, out var hostsOption, out var debugOption);
 
-            initCommand.SetHandler(async (credentialsFileName, hostsFileName) =>
+            initCommand.SetHandler(async (credentialsFileName, hostsFileName, debug) =>
             {
-                await handle(credentialsFileName, hostsFileName);
-            }, credOption, hostsOption);
+                await handle(credentialsFileName, hostsFileName, debug);
+            }, credOption, hostsOption, debugOption);
 
             return initCommand;
         }
 
-        private async Task handle(string credentialsFileName, string hostsFileName)
+        private async Task handle(string credentialsFileName, string hostsFileName, bool debug)
         {
             var hosts = new HostsCfgEntity();
             hosts.Hosts.Add(new HostCfgEntity()
             {
                 Name = "host1",
                 Address = "dns or ip",
-                CredentialsAlias = "default"
+                CredentialsAlias = "default",
+                Params = new Dictionary<string, string>()
+                {
+                    {"custom-param1", "1234"}
+                }
             });
             WriteYamlFileIfNotExists(hostsFileName, hosts);
 

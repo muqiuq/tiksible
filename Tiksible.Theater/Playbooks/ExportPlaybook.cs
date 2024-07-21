@@ -10,9 +10,11 @@ namespace Tiksible.Theater.Playbooks
     {
         List<FullExecutionOrder> orderList = new List<FullExecutionOrder>();
 
+        public const string ArtifactName = "config";
+
         public ExportPlaybook()
         {
-            orderList.Add(ExecutionOrderHelper.Export("config"));
+            orderList.Add(ExecutionOrderHelper.Export(ArtifactName));
         }
 
         public List<FullExecutionOrder> GetExecutionOrders()

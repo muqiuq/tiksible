@@ -26,17 +26,17 @@ namespace Tiksible.Handler
                 () => "backups", "path to output folder");
             backupCommand.AddOption(outputFolderOption);
 
-            AddCredHostsDefaultArgument(backupCommand, out var credOption, out var hostsOption);
+            AddCredHostsDefaultArgument(backupCommand, out var credOption, out var hostsOption, out var debugOption);
 
-            backupCommand.SetHandler(async (outputFolder, credentialsFileName, hostsFileName) =>
+            backupCommand.SetHandler(async (outputFolder, credentialsFileName, hostsFileName, debug) =>
             {
-                await HandleBackup(outputFolder, credentialsFileName, hostsFileName);
-            }, outputFolderOption, credOption, hostsOption);
+                await HandleBackup(outputFolder, credentialsFileName, hostsFileName, debug);
+            }, outputFolderOption, credOption, hostsOption, debugOption);
 
             return backupCommand;
         }
 
-        private async Task HandleBackup(string outputFolder, string credentialsFileName, string hostsFileName)
+        private async Task HandleBackup(string outputFolder, string credentialsFileName, string hostsFileName, bool debug)
         {
             if (!Directory.Exists(outputFolder))
             {

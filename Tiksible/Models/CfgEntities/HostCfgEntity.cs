@@ -15,5 +15,6 @@ namespace Tiksible.Models.CfgEntities
 
         public string CredentialsAlias { get; set; }
 
+        public Dictionary<string, string> Params { get; set; }
     }
 }

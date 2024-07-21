@@ -29,15 +29,20 @@ namespace GNS3aaS.CLI.Handler
             this.configStorage = configStorage;
         }
 
-        public void AddCredHostsDefaultArgument(Command initCommand, out Option<string> credOption, out Option<string> hostsOption)
+        public void AddCredHostsDefaultArgument(Command initCommand, out Option<string> credOption, out Option<string> hostsOption, out Option<bool> debugOption)
         {
             credOption = new Option<string>(new string[]{"-c", "--credentials"},
                 () => GlobalConstants.DefaultCredentialsFilename, "path to credentials yaml file");
             hostsOption = new Option<string>(new string[] { "-h", "--hosts" },
                 () => GlobalConstants.DefaultHostsFileName, "path to hosts yaml file");
 
+            debugOption = new Option<bool>(new string[] { "-v", "--verbose" },
+                () => false, "debug");
+
             initCommand.AddOption(credOption);
             initCommand.AddOption(hostsOption);
+            initCommand.AddOption(debugOption);
+
         }
 
         public void LoadHostsAndCredentials(string credentialsFileName, string hostsFileName)

@@ -8,12 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Scriban" Version="5.10.0" />
     <PackageReference Include="YamlDotNet" Version="16.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Tiksible.Theater\Tiksible.Theater.csproj" />
     <ProjectReference Include="..\Tiksible\Tiksible.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestData\01_example.rsc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

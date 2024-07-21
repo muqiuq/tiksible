@@ -87,7 +87,30 @@ add address=192.168.10.1/24 comment=defconf interface=bridge network=192.168.10.
 /ip address add address=192.168.10.1/24 comment=defconf interface=bridge network=192.168.10.0
 /ip address add address=192.168.88.1/24 comment=defconf interface=bridge network=192.168.88.0";
 
-    public static string ExpectedParseResultOutput =
+        public static string RscFile3 =
+            @"/interface bridge port
+
+add bridge=bridge interface=ether3
+
+add bridge=bridge interface=ether4
+
+add bridge=bridge interface=ether5
+
+add bridge=bridge interface=ether6
+
+add bridge=bridge interface=ether7
+
+add bridge=bridge interface=ether8";
+
+        public static string RscFile3ExpectedResult =
+            @"/interface bridge port add bridge=bridge interface=ether3
+/interface bridge port add bridge=bridge interface=ether4
+/interface bridge port add bridge=bridge interface=ether5
+/interface bridge port add bridge=bridge interface=ether6
+/interface bridge port add bridge=bridge interface=ether7
+/interface bridge port add bridge=bridge interface=ether8";
+
+        public static string ExpectedParseResultOutput =
         @"/ip firewall filter add action=accept chain=input comment=""defconf: accept established,related,untracked"" connection-state=established,related,untracked
 /ip firewall filter add action=accept chain=input comment=""Anti-Lockout Rule"" src-address=192.168.0.0/16
 /ip firewall filter add action=drop chain=input comment=""defconf: drop invalid"" connection-state=invalid

@@ -9,14 +9,14 @@ namespace Tiksible.Helpers
     public static class ConsoleOutputHelper
     {
 
-        public static string MakeDeviderLine(string input)
+        public static string MakeDeviderLine(string input, char character = '=')
         {
             int totalWidth = Console.WindowWidth;
             int inputLength = input.Length + 5; // 3 for "=== " and 2 for " "
             int remainingWidth = totalWidth - inputLength;
             if (remainingWidth < 0) remainingWidth = 0;
 
-            return $"=== {input} {new string('=', remainingWidth)}";
+            return $"{character}{character}{character} {input} {new string(character, remainingWidth)}";
         }
 
         public static void PrintStatusLine(string input, bool isSuccess)
