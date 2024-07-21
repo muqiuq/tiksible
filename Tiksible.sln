@@ -5,7 +5,13 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tiksible", "Tiksible\Tiksible.csproj", "{93EFCC2F-E082-43FB-843B-C2515BCC1402}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiksible.Tests", "Tiksible.Tests\Tiksible.Tests.csproj", "{423ECC12-8E07-4881-A6B2-88F3319DF88D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tiksible.Tests", "Tiksible.Tests\Tiksible.Tests.csproj", "{423ECC12-8E07-4881-A6B2-88F3319DF88D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiksible.Theater", "Tiksible.Theater\Tiksible.Theater.csproj", "{37953232-1A85-486B-8A17-9A06791B2BA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiksible.Lib", "Tiksible.Lib\Tiksible.Lib.csproj", "{686C9173-6566-4840-BC29-AEB8564ECB57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevConsole", "DevConsole\DevConsole.csproj", "{D7E6E863-FAE7-4E0B-9C86-90599116567C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{423ECC12-8E07-4881-A6B2-88F3319DF88D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{423ECC12-8E07-4881-A6B2-88F3319DF88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{423ECC12-8E07-4881-A6B2-88F3319DF88D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37953232-1A85-486B-8A17-9A06791B2BA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37953232-1A85-486B-8A17-9A06791B2BA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37953232-1A85-486B-8A17-9A06791B2BA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37953232-1A85-486B-8A17-9A06791B2BA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{686C9173-6566-4840-BC29-AEB8564ECB57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{686C9173-6566-4840-BC29-AEB8564ECB57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{686C9173-6566-4840-BC29-AEB8564ECB57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{686C9173-6566-4840-BC29-AEB8564ECB57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7E6E863-FAE7-4E0B-9C86-90599116567C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7E6E863-FAE7-4E0B-9C86-90599116567C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7E6E863-FAE7-4E0B-9C86-90599116567C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7E6E863-FAE7-4E0B-9C86-90599116567C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,18 @@
-﻿using tik4net.Objects;
+﻿using System.CommandLine;
+using System.Text;
+using System.Text.RegularExpressions;
+using GNS3aaS.CLI.Services;
+using Renci.SshNet;
+using tik4net;
+using tik4net.Objects;
+using tik4net.Objects.User;
+using Tiksible.Exceptions;
+using Tiksible.Handler;
 using Tiksible.Models;
 using Tiksible.Services;
+using Tiksible.Theater;
+using Tiksible.Theater.Playbooks;
+using Tiksible.Theater.SshHelpers;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization.NodeDeserializers;
@@ -9,33 +21,25 @@ namespace Tiksible
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            var testData1 = File.ReadAllText("TestData/01_parse_example.rsc");
+            var configStorage = ConfigStorage.CreateOrLoad();
 
-            var statements = RosRscParser.Parse(testData1);
-
-            foreach (var statement in statements)
+            try
             {
-                Console.WriteLine(statement.Export());
+                var rootCommand = new RootCommand("GNS3aas CLI client")
+                {
+                    (new InitHandler(configStorage)).GetCommand(),
+                    new BackupHandler(configStorage).GetCommand(),
+                    new RunHandler(configStorage).GetCommand()
+                };
+
+                return rootCommand.InvokeAsync(args).Result;
             }
-        }
-
-        static void YamlTest()
-        {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                .Build();
-
-            var exampleConfig = File.ReadAllText("example.yaml");
-
-            var configTasks = deserializer.Deserialize<List<ConfigTask>>(exampleConfig);
-            //var configTask = deserializer.Deserialize(exampleConfig);
-
-            foreach (var configTask in configTasks)
+            catch (UserArgumentErrorException ex)
             {
-                var tikEntries = TikEntityHelper.GetTikEntities(configTask);
-                Console.WriteLine(tikEntries);
+                Console.WriteLine(ex.Message);
+                return 1;
             }
         }
     }
