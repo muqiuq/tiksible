@@ -4,10 +4,13 @@ using System.CommandLine;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tiksible.Helpers;
+using Tiksible.Models.CfgEntities;
 using Tiksible.Models.CfgEntities.Extensions;
 using Tiksible.Services;
 using Tiksible.Theater;
 using Tiksible.Theater.Playbooks;
+using Tiksible.Theater.SshHelpers;
 
 namespace Tiksible.Handler
 {
@@ -58,17 +61,42 @@ namespace Tiksible.Handler
                 
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
 
-                var backupPlaybook = RunPlaybook(conInfo, new BackupPlaybook());
+                Console.WriteLine($"Backing up {host.Name}...");
 
-                await File.WriteAllBytesAsync(Path.Combine(finalOutputPath, $"{host.Name}.backup"), backupPlaybook.Files[BackupPlaybook.TmpBackupFileName]);
+                var backupSuccess = false;
 
-                var exportPlaybook = RunPlaybook(conInfo, new ExportPlaybook());
+                try
+                {
+                    await RunBackup(host, conInfo, finalOutputPath);
+                    backupSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    if (debug)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                    else
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    backupSuccess = false;
+                }
 
-                await File.WriteAllTextAsync(Path.Combine(finalOutputPath, $"{host.Name}.rsc"), exportPlaybook.Artifacts["config"]);
-
-                Console.WriteLine($"Backup completed for {host.Name}");
+                ConsoleOutputHelper.PrintStatusLine($"Backup {host.Name}", backupSuccess);
             }
             #endregion
+        }
+
+        private async Task RunBackup(HostCfgEntity host, ISshConnectionInfo conInfo, string finalOutputPath)
+        {
+            var backupPlaybook = RunPlaybook(conInfo, new BackupPlaybook());
+
+            await File.WriteAllBytesAsync(Path.Combine(finalOutputPath, $"{host.Name}.backup"), backupPlaybook.Files[BackupPlaybook.TmpBackupFileName]);
+
+            var exportPlaybook = RunPlaybook(conInfo, new ExportPlaybook());
+
+            await File.WriteAllTextAsync(Path.Combine(finalOutputPath, $"{host.Name}.rsc"), exportPlaybook.Artifacts["config"]);
         }
     }
 }
