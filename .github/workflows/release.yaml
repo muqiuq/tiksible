@@ -37,7 +37,7 @@ jobs:
           release_name="tiksible-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish -p:PublishSingleFile=true -p:JsonSerializerIsReflectionEnabledByDefault=true --self-contained --runtime "${{ matrix.target }}" -o "$release_name" Tiksible/Tiksible
+          dotnet publish -p:PublishSingleFile=true -p:JsonSerializerIsReflectionEnabledByDefault=true --self-contained --runtime "${{ matrix.target }}" -o "$release_name" Tiksible/Tiksible.csproj
 
           # Delete output directory
           rm -r "$release_name"
