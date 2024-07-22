@@ -42,10 +42,9 @@ jobs:
           # Build everything
           dotnet publish -p:PublishSingleFile=true -p:JsonSerializerIsReflectionEnabledByDefault=true --self-contained --runtime "${{ matrix.target }}" -o "$release_name" Tiksible/Tiksible.csproj
 
-          ls $release_name
+          rm -rf $release_name/TestData
 
-          cp "$release_name/Tiksible" . 2>/dev/null || true
-          cp "$release_name/Tiksible.exe" . 2>/dev/null || true
+          zip -r $release_name.zip $release_name
           
           # Delete output directory
           rm -r "$release_name"
@@ -56,7 +55,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-             Tiksible
-             Tiksible.exe
+             tiksible*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
