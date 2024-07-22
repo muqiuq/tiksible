@@ -12,5 +12,6 @@ namespace Tiksible.Theater
         FileUpload = 2,
         FileDownload = 3,
         Sleep  = 4,
+        DeleteFile = 5,
     }
 }

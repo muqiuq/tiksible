@@ -38,7 +38,7 @@ namespace Tiksible.Theater
             {
                 client.Connect();
                 sftpClient.Connect();
-                logger.LogInformation($"Executing Playbook {playbook.GetType().Name} on {sshConnectionInfo}");
+                logger.LogDebug($"Executing Playbook {playbook.GetType().Name} on {sshConnectionInfo}");
 
                 foreach (var order in playbook.GetExecutionOrders())
                 {
@@ -71,6 +71,7 @@ namespace Tiksible.Theater
             if (order.GetOrderType() == ExecutionOrderType.Command) return ExecuteCommand(client, order, state);
             if (order.GetOrderType() == ExecutionOrderType.FileUpload) return ExecuteFileUpload(client, sftpClient, order, state);
             if (order.GetOrderType() == ExecutionOrderType.FileDownload) return ExecuteFileDownload(client, sftpClient, order, state);
+            if (order.GetOrderType() == ExecutionOrderType.DeleteFile) return ExecuteFileDelete(client, sftpClient, order, state);
             if (order.GetOrderType() == ExecutionOrderType.Sleep) return ExecuteSleep(client, sftpClient, order, state);
             return false;
         }
@@ -110,17 +111,14 @@ namespace Tiksible.Theater
         private bool ExecuteFileUpload(SshClient client, SftpClient sftpClient, IExecutionOrder order, string state)
         {
             var filePath = order.Command();
-            var temporaryFilePath = $"/tmp/gns3aas-{Guid.NewGuid()}";
             if(!Files.ContainsKey(filePath))
             {
                 logger.LogWarning($"File not found in playbook runner context: {filePath}");
                 return false;
             }
             var fileStream = new MemoryStream(Files[filePath]);
-            sftpClient.UploadFile(fileStream, temporaryFilePath, canOverride: true);
-            var cmd = client.CreateCommand($"sudo mv {temporaryFilePath} {filePath}");
-            cmd.Execute();
-            return cmd.ExitStatus == 0;
+            sftpClient.UploadFile(fileStream, filePath, canOverride: true);
+            return true;
         }
 
         private bool ExecuteFileDownload(SshClient client, SftpClient sftpClient, IExecutionOrder order, string state)
@@ -129,6 +127,13 @@ namespace Tiksible.Theater
             var inboundFile = new MemoryStream();
             sftpClient.DownloadFile(filePath, inboundFile);
             Files[filePath] = inboundFile.ToArray();
+            return true;
+        }
+
+        private bool ExecuteFileDelete(SshClient client, SftpClient sftpClient, IExecutionOrder order, string state)
+        {
+            var filePath = order.Command();
+            sftpClient.DeleteFile(filePath);
             return true;
         }
     }

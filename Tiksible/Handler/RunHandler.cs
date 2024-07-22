@@ -25,19 +25,19 @@ namespace Tiksible.Handler
             var cmdArg = new Argument<string>("cmd", "command to run");
             runCommand.AddArgument(cmdArg);
 
-            AddCredHostsDefaultArgument(runCommand, out var credOption, out var hostsOption, out var debugOption);
+            AddCredHostsDefaultArgument(runCommand, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
-            runCommand.SetHandler(async (string cmd, string credentialsFileName, string hostsFileName, bool debug) =>
+            runCommand.SetHandler(async (string cmd, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
             {
-                await HandleRun(cmd, credentialsFileName, hostsFileName, debug);
-            }, cmdArg, credOption, hostsOption, debugOption);
+                await HandleRun(cmd, credentialsFileName, hostsFileName, debug, hostFilter);
+            }, cmdArg, credOption, hostsOption, debugOption, hostFilterOption);
 
             return runCommand;
         }
 
-        private async Task HandleRun(string cmd, string credentialsFileName, string hostsFileName, bool debug)
+        private async Task HandleRun(string cmd, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
-            LoadHostsAndCredentials(credentialsFileName, hostsFileName);
+            LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             CheckCredentialsForAllHosts();
 
             foreach (var host in Hosts.Hosts)

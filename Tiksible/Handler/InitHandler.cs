@@ -22,17 +22,17 @@ namespace Tiksible.Handler
         {
             var initCommand = new Command("init", "init project");
 
-            AddCredHostsDefaultArgument(initCommand, out var credOption, out var hostsOption, out var debugOption);
+            AddCredHostsDefaultArgument(initCommand, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
-            initCommand.SetHandler(async (credentialsFileName, hostsFileName, debug) =>
+            initCommand.SetHandler(async (credentialsFileName, hostsFileName, debug, hostFilter) =>
             {
-                await handle(credentialsFileName, hostsFileName, debug);
-            }, credOption, hostsOption, debugOption);
+                await handle(credentialsFileName, hostsFileName, debug, hostFilter);
+            }, credOption, hostsOption, debugOption, hostFilterOption);
 
             return initCommand;
         }
 
-        private async Task handle(string credentialsFileName, string hostsFileName, bool debug)
+        private async Task handle(string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             var hosts = new HostsCfgEntity();
             hosts.Hosts.Add(new HostCfgEntity()
@@ -40,7 +40,7 @@ namespace Tiksible.Handler
                 Name = "host1",
                 Address = "dns or ip",
                 CredentialsAlias = "default",
-                Params = new Dictionary<string, string>()
+                Params = new Dictionary<string, object>()
                 {
                     {"custom-param1", "1234"}
                 }

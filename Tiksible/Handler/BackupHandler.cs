@@ -26,24 +26,24 @@ namespace Tiksible.Handler
                 () => "backups", "path to output folder");
             backupCommand.AddOption(outputFolderOption);
 
-            AddCredHostsDefaultArgument(backupCommand, out var credOption, out var hostsOption, out var debugOption);
+            AddCredHostsDefaultArgument(backupCommand, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
-            backupCommand.SetHandler(async (outputFolder, credentialsFileName, hostsFileName, debug) =>
+            backupCommand.SetHandler(async (outputFolder, credentialsFileName, hostsFileName, debug, hostFilter) =>
             {
-                await HandleBackup(outputFolder, credentialsFileName, hostsFileName, debug);
-            }, outputFolderOption, credOption, hostsOption, debugOption);
+                await HandleBackup(outputFolder, credentialsFileName, hostsFileName, debug, hostFilter);
+            }, outputFolderOption, credOption, hostsOption, debugOption, hostFilterOption);
 
             return backupCommand;
         }
 
-        private async Task HandleBackup(string outputFolder, string credentialsFileName, string hostsFileName, bool debug)
+        private async Task HandleBackup(string outputFolder, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             if (!Directory.Exists(outputFolder))
             {
                 Directory.CreateDirectory(outputFolder);
                 Console.WriteLine($"Created output folder {outputFolder}");
             }
-            LoadHostsAndCredentials(credentialsFileName, hostsFileName);
+            LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             var timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
 
             CheckCredentialsForAllHosts();

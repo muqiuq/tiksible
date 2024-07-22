@@ -11,22 +11,19 @@ using Tiksible.Exceptions;
 using Tiksible.Helpers;
 using Tiksible.Models.CfgEntities.Extensions;
 using Tiksible.Services;
-using Tiksible.Theater;
 using Tiksible.Theater.Playbooks;
 
 namespace Tiksible.Handler
 {
-    public class ApplyHandler : BaseHandler, IHandler
+    public class DiffHandler : BaseHandler, IHandler
     {
-        public ApplyHandler(ConfigStorage configStorage) : base(configStorage)
+        public DiffHandler(ConfigStorage configStorage) : base(configStorage)
         {
-
         }
-
 
         public Command GetCommand()
         {
-            var applyCommand = new Command("apply", "render template and apply to hosts");
+            var applyCommand = new Command("diff", "compare remote config with template and apply diff");
 
             var rscFilenameArg = new Argument<string>("rsc-filename", "path to the rsc file");
             applyCommand.AddArgument(rscFilenameArg);
@@ -37,12 +34,12 @@ namespace Tiksible.Handler
             );
             applyCommand.AddOption(writeOption);
 
-            AddCredHostsDefaultArgument(applyCommand, out var credOption, out var hostsOption, out var debugOption, out var filterOption);
+            AddCredHostsDefaultArgument(applyCommand, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
             applyCommand.SetHandler(async (string rscFilename, bool write, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
             {
                 await HandleApply(rscFilename, write, credentialsFileName, hostsFileName, debug, hostFilter);
-            }, rscFilenameArg, writeOption, credOption, hostsOption, debugOption, filterOption);
+            }, rscFilenameArg, writeOption, credOption, hostsOption, debugOption, hostFilterOption);
 
             return applyCommand;
         }
@@ -62,9 +59,11 @@ namespace Tiksible.Handler
 
             var template = Template.Parse(templateFileContent);
 
+
+
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"APPLY @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"DIFF @ {host.Name}"));
 
                 var goalRscFileRaw = template.Render(new { Host = host, Credentials = host.GetCredentials(Credentials) });
 
@@ -74,25 +73,38 @@ namespace Tiksible.Handler
                     Console.WriteLine(goalRscFileRaw);
                     Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END"));
                 }
+                
 
-                if (write)
+                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+
+                var exportPlaybook = RunPlaybook(conInfo, new ExportPlaybook());
+
+                var isRscConfigString = exportPlaybook.Artifacts[ExportPlaybook.ArtifactName];
+
+                var isRscConfig = RosRscParser.Parse(isRscConfigString);
+                var shouldRscConfig = RosRscParser.Parse(goalRscFileRaw);
+
+                RosRscStatementCleaner.RemoveNotRequiredParameters(isRscConfig);
+                RosRscStatementCleaner.RemoveNotRequiredParameters(shouldRscConfig);
+
+                var comparisonResult = isRscConfig.Compare(shouldRscConfig);
+
+                foreach (var statement in comparisonResult.MissingStatemenetsOwn)
                 {
-                    var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
-
-                    var playbookRunner = new PlaybookRunner(conInfo, new RunRscScriptPlaybook());
-
-                    playbookRunner.Files.Add(RunRscScriptPlaybook.FileName, Encoding.UTF8.GetBytes(goalRscFileRaw));
-
-                    playbookRunner.Run();
-
-                    ConsoleOutputHelper.PrintStatusLine($"Apply {rscFilename} @ {host.Name}", playbookRunner.IsSuccess());
-
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"OUTPUT", '-'));
-                    Console.WriteLine(playbookRunner.Artifacts[RunRscScriptPlaybook.Output]);
+                    var statementStr = statement.Export();
+                    Console.WriteLine(statementStr);
+                    if (write)
+                    {
+                        var runPlaybook = RunPlaybook(conInfo, new RunSingleCmdPlaybook(statementStr));
+                        ConsoleOutputHelper.PrintStatusLine(statementStr, runPlaybook.IsSuccess());
+                    }
                 }
 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END APPLY @ {host.Name}"));
+                
+
+                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"FINISHED DIFF @ {host.Name}"));
             }
         }
     }
 }
+

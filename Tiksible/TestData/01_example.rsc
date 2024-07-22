@@ -13,8 +13,8 @@ add bridge=bridge interface=ether{{ i }}
 {{ end }}
 /ip address
 add address=192.168.10.1/24 interface=bridge network=192.168.10.0
-/ip address
 add address=192.168.11.1/24 interface=bridge network=192.168.11.0
+add address=192.168.12.1/24 interface=bridge network=192.168.12.0
 /ip dhcp-client
 add interface=ether1
 add add-default-route=no interface=ether2 use-peer-dns=no

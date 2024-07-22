@@ -2,7 +2,7 @@
   "profiles": {
     "Tiksible": {
       "commandName": "Project",
-      "commandLineArgs": "apply .\\TestData\\01_example.rsc -v --write"
+      "commandLineArgs": "apply .\\02_vlans.rsc --write"
     }
   }
 }

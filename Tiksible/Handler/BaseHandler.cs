@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Tiksible;
 using Tiksible.Exceptions;
@@ -29,12 +30,16 @@ namespace GNS3aaS.CLI.Handler
             this.configStorage = configStorage;
         }
 
-        public void AddCredHostsDefaultArgument(Command initCommand, out Option<string> credOption, out Option<string> hostsOption, out Option<bool> debugOption)
+        public void AddCredHostsDefaultArgument(Command initCommand, out Option<string> credOption
+            , out Option<string> hostsOption, out Option<bool> debugOption, out Option<string> filterOption)
         {
             credOption = new Option<string>(new string[]{"-c", "--credentials"},
                 () => GlobalConstants.DefaultCredentialsFilename, "path to credentials yaml file");
             hostsOption = new Option<string>(new string[] { "-h", "--hosts" },
                 () => GlobalConstants.DefaultHostsFileName, "path to hosts yaml file");
+
+            filterOption = new Option<string>(new string[] { "-f", "--filter" },
+                () => "", "filter hosts using regex");
 
             debugOption = new Option<bool>(new string[] { "-v", "--verbose" },
                 () => false, "debug");
@@ -42,12 +47,20 @@ namespace GNS3aaS.CLI.Handler
             initCommand.AddOption(credOption);
             initCommand.AddOption(hostsOption);
             initCommand.AddOption(debugOption);
+            initCommand.AddOption(filterOption);
 
         }
 
-        public void LoadHostsAndCredentials(string credentialsFileName, string hostsFileName)
+        public void LoadHostsAndCredentials(string credentialsFileName, string hostsFileName, string filter)
         {
             Hosts = LoadYaml<HostsCfgEntity>(hostsFileName);
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                var hostFilterRegex = new Regex(filter);
+                var countBefore = Hosts.Hosts.Count;
+                Hosts.Hosts = Hosts.Hosts.Where(h => hostFilterRegex.IsMatch(h.Name)).ToList();
+                Console.WriteLine($"filter matched {Hosts.Hosts.Count} of {countBefore} hosts");
+            }
             Credentials = LoadYaml<CredentialsCfgEntity>(credentialsFileName);
         }
 

@@ -27,11 +27,12 @@ namespace Tiksible
 
             try
             {
-                var rootCommand = new RootCommand("GNS3aas CLI client")
+                var rootCommand = new RootCommand("Tiksible - Automation for MikroTik")
                 {
                     (new InitHandler(configStorage)).GetCommand(),
                     new BackupHandler(configStorage).GetCommand(),
                     new RunHandler(configStorage).GetCommand(),
+                    new DiffHandler(configStorage).GetCommand(),
                     new ApplyHandler(configStorage).GetCommand()
                 };
 

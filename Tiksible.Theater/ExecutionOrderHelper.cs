@@ -29,10 +29,7 @@ namespace Tiksible.Theater
         public static FullExecutionOrder UploadFile(string fileName)
         {
             return new FullExecutionOrder()
-                .AddOrder(new FileUploadOrder(fileName))
-                .AddPostCheck(new CommandExectionOrder(
-                    $":if ([:len [/file find name=\"tmp1.rsc\"]] > 0) do={{:put \"1\"}} else={{:put \"0\"}}",
-                    CompareStringFunc("1")));
+                .AddOrder(new FileUploadOrder(fileName));
         }
 
         public static FullExecutionOrder DownloadFile(string fileName)
@@ -55,10 +52,34 @@ namespace Tiksible.Theater
                 .AddOrder(new CommandExectionOrder(cmd));
         }
 
+        internal static FullExecutionOrder DeleteFile(string path)
+        {
+            return new FullExecutionOrder()
+                .AddOrder(new CommandExectionOrder($"/file/remove {path}"))
+                .AddPostCheck(new CommandExectionOrder(
+                    $":if ([:len [/file find name=\"{path}\"]] > 0) do={{:put \"1\"}} else={{:put \"0\"}}",
+                    CompareStringFunc("0")));
+        }
+
+        internal static FullExecutionOrder DeleteFileSFTP(string path)
+        {
+            return new FullExecutionOrder()
+                .AddOrder(new FileDeleteOrder(path));
+        }
+
         internal static FullExecutionOrder CmdWithOutput(string cmd, string artifactName)
         {
             return new FullExecutionOrder()
                 .AddOrder(new CommandExectionOrder(cmd, artifactName: artifactName));
         }
+
+
+        internal static FullExecutionOrder Sleep(int v)
+        {
+            return new FullExecutionOrder()
+                .AddOrder(new SleepExecutionOrder(v));
+
+        }
+
     }
 }
