@@ -11,6 +11,11 @@ namespace Tiksible.Models.CfgEntities.Extensions
     {
         public static ISshConnectionInfo GetSshConnectionInfo(this CredentialCfgEntity credential, string hostname)
         {
+            if (!string.IsNullOrEmpty(credential.PrivateKey) && !string.IsNullOrEmpty(credential.Password))
+            {
+                return SshConnectionInfoFactory.CreateCombinedConnectionInfo(hostname, credential.Username, credential.Password,credential.PrivateKey);
+            }
+
             if (!string.IsNullOrEmpty(credential.PrivateKey))
             {
                 return SshConnectionInfoFactory.CreatePubKeyConnectionInfo(hostname, credential.Username, credential.PrivateKey);
