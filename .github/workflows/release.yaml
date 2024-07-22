@@ -18,7 +18,7 @@ jobs:
             os: ubuntu-latest
             target: linux-x64
           - kind: windows
-            os: ubuntu-latest
+            os: windows-latest
             target: win-x64
           - kind: macOS
             os: macos-latest
