@@ -26,11 +26,11 @@ namespace Tiksible.Handler
 
         public Command GetCommand()
         {
-            var cmd = new Command("update", "update packages");
+            var cmd = new Command("update", "update packages on host");
 
             var writeOption = new Option<bool>(
                 "--write",
-                "not only checks version and availability but also runs update"
+                "apply update if available"
             );
             cmd.AddOption(writeOption);
 
@@ -96,7 +96,7 @@ namespace Tiksible.Handler
 
                     if (latestVersion == null)
                     {
-                        Console.WriteLine("Could not retrieve latest-version. can the host reach the mikrotik update servers?");
+                        Console.WriteLine("Could not retrieve latest-version. Is the host available to reach the mikrotik update servers?");
                     }
                     else
                     {

@@ -21,7 +21,8 @@ namespace Tiksible
                     new DiffHandler(configStorage).GetCommand(),
                     new ApplyHandler(configStorage).GetCommand(),
                     new InstallSshPubKeyHandler(configStorage).GetCommand(),
-                    new UpdateHandler(configStorage).GetCommand()
+                    new UpdateHandler(configStorage).GetCommand(),
+                    new TestHandler(configStorage).GetCommand()
                 };
 
                 return rootCommand.InvokeAsync(args).Result;
