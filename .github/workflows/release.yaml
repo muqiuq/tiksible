@@ -35,12 +35,11 @@ jobs:
         run: |
           tag=$(git describe --tags --abbrev=0)
           release_name="tiksible-$tag-${{ matrix.target }}"
-          pwd
-
-          ls
           
           # Build everything
           dotnet publish -p:PublishSingleFile=true -p:JsonSerializerIsReflectionEnabledByDefault=true --self-contained --runtime "${{ matrix.target }}" -o "$release_name" Tiksible/Tiksible.csproj
+
+          ls $release_name
 
           cp "$release_name/Tiksible" . 2>/dev/null || true
           cp "$release_name/Tiksible.exe" . 2>/dev/null || true
@@ -51,6 +50,6 @@ jobs:
       - name: Publish
         uses: softprops/action-gh-release@v1
         with:
-          files: "tiksible*"
+          files: "Tiksible*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
