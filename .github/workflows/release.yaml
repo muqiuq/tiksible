@@ -4,6 +4,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Release
@@ -28,23 +31,34 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: 8.x
 
       - name: Build
         shell: bash
         run: |
           tag=$(git describe --tags --abbrev=0)
           release_name="tiksible-$tag-${{ matrix.target }}"
-
+          
           # Build everything
-          dotnet publish -p:PublishSingleFile=true -p:JsonSerializerIsReflectionEnabledByDefault=true --self-contained --runtime "${{ matrix.target }}" -o "$release_name" Tiksible
+          dotnet publish -p:PublishSingleFile=true -p:JsonSerializerIsReflectionEnabledByDefault=true --self-contained --runtime "${{ matrix.target }}" -o "$release_name" Tiksible/Tiksible.csproj
 
+          rm -rf $release_name/TestData
+
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            7z a -tzip "${release_name}.zip" "./${release_name}/"
+          else
+            zip -r $release_name.zip $release_name
+          fi
+          
           # Delete output directory
           rm -r "$release_name"
 
+          ls -lha
+
       - name: Publish
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: "tiksible*"
+          files: |
+             tiksible*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
