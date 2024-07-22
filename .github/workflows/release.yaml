@@ -42,6 +42,9 @@ jobs:
           # Build everything
           dotnet publish -p:PublishSingleFile=true -p:JsonSerializerIsReflectionEnabledByDefault=true --self-contained --runtime "${{ matrix.target }}" -o "$release_name" Tiksible/Tiksible.csproj
 
+          cp "$release_name/Tiksible" . 2>/dev/null || true
+          cp "$release_name/Tiksible.exe" . 2>/dev/null || true
+          
           # Delete output directory
           rm -r "$release_name"
 
