@@ -1,5 +1,4 @@
-﻿using GNS3aaS.CLI.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.CommandLine;
 using System.Linq;
@@ -10,12 +9,13 @@ using Tiksible;
 using Tiksible.Exceptions;
 using Tiksible.Models.CfgEntities;
 using Tiksible.Models.CfgEntities.Extensions;
+using Tiksible.Services;
 using Tiksible.Theater;
 using Tiksible.Theater.SshHelpers;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace GNS3aaS.CLI.Handler
+namespace Tiksible.Handler
 {
     public abstract class BaseHandler
     {

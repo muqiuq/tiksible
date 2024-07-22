@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace GNS3aaS.CLI.Services
+namespace Tiksible.Services
 {
     public class ConfigStorage
     {
