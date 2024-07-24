@@ -16,6 +16,7 @@ namespace Tiksible.Theater.Playbooks
         {
             orderList.Add(ExecutionOrderHelper.Cmd($"/system/backup/save dont-encrypt=yes name={TmpBackupFileName}"));
             orderList.Add(ExecutionOrderHelper.DownloadFile($"{TmpBackupFileName}"));
+            orderList.Add(ExecutionOrderHelper.DeleteFileSFTP($"{TmpBackupFileName}"));
         }
 
         public List<FullExecutionOrder> GetExecutionOrders()

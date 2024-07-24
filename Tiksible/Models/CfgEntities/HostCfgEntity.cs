@@ -15,6 +15,8 @@ namespace Tiksible.Models.CfgEntities
 
         public string CredentialsAlias { get; set; }
 
+        public int SshPort { get; set; } = 22;
+
         public Dictionary<string, object> Params { get; set; }
     }
 }

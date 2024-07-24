@@ -43,7 +43,7 @@ namespace Tiksible.Handler
 
             foreach (var host in Hosts.Hosts)
             {
-                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
                 
                 ConsoleOutputHelper.PrintStatusLine($"{host.Name}", SshConnectionTestService.TestConnection(conInfo));
             }

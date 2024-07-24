@@ -73,7 +73,7 @@ namespace Tiksible.Handler
                 }
                 
 
-                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 var exportPlaybook = RunPlaybook(conInfo, new ExportPlaybook());
 

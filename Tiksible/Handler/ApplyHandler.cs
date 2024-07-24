@@ -75,7 +75,7 @@ namespace Tiksible.Handler
 
                 if (write)
                 {
-                    var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+                    var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                     var playbookRunner = new PlaybookRunner(conInfo, new RunRscScriptPlaybook());
 

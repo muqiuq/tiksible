@@ -67,7 +67,7 @@ namespace Tiksible.Handler
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"PUBKEY @ {host.Name}"));
 
-                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 var playbookRunnerCheckKey = new PlaybookRunner(conInfo,
                     new RunSingleCmdPlaybook($":put [:len [/user ssh-keys find key-owner=\"{publicKeyName}\"]]"));

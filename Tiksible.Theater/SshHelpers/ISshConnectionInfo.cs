@@ -10,6 +10,8 @@ namespace Tiksible.Theater.SshHelpers
     public interface ISshConnectionInfo
     {
         public string HostName { get; set; }
+        
+        public int SshPort { get; set; }
 
         public string Username { get; set; }
 

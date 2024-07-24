@@ -43,7 +43,7 @@ namespace Tiksible.Handler
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RUN @ {host.Name}"));
                 
-                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 var runPlaybook = RunPlaybook(conInfo, new RunSingleCmdPlaybook(cmd));
                 

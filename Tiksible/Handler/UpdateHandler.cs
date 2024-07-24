@@ -85,7 +85,7 @@ namespace Tiksible.Handler
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"UPDATE @ {host.Name}"));
 
-                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 if (!GetInstalledAndLatestVersion(conInfo, out var installedVersion, out var latestVersion))
                 {

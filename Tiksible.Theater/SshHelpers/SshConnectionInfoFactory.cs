@@ -10,19 +10,19 @@ namespace Tiksible.Theater.SshHelpers
     {
 
         public static ISshConnectionInfo CreateUserNamePasswordConnectionInfo(string hostname, string username,
-            string password)
+            string password, int sshPort)
         {
-            return new SshConnectionInfoPassword(hostname, username, password);
+            return new SshConnectionInfoPassword(hostname, username, password, sshPort);
         }
 
-        public static ISshConnectionInfo CreatePubKeyConnectionInfo(string hostname, string username, string privateKey)
+        public static ISshConnectionInfo CreatePubKeyConnectionInfo(string hostname, string username, string privateKey, int sshPort)
         {
-            return new SshConnectionInfoPubKey(hostname, username, privateKey);
+            return new SshConnectionInfoPubKey(hostname, username, privateKey, sshPort);
         }
 
-        public static ISshConnectionInfo CreateCombinedConnectionInfo(string hostname, string username, string password, string privateKey)
+        public static ISshConnectionInfo CreateCombinedConnectionInfo(string hostname, string username, string password, string privateKey, int sshPort)
         {
-            return new SshConnectionInfoPubKeyPassword(hostname, username, privateKey, password);
+            return new SshConnectionInfoPubKeyPassword(hostname, username, privateKey, password, sshPort);
         }
     }
 }

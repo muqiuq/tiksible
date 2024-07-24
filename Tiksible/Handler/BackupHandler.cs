@@ -59,7 +59,7 @@ namespace Tiksible.Handler
                     Directory.CreateDirectory(finalOutputPath);
                 }
                 
-                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host.Address);
+                var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 Console.WriteLine($"Backing up {host.Name}...");
 
