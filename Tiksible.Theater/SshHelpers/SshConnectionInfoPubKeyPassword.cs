@@ -28,8 +28,22 @@ namespace Tiksible.Theater.SshHelpers
 
         public ConnectionInfo GetConnectionInfo()
         {
-            var privateKeyFile = new PrivateKeyFile(new MemoryStream(Encoding.UTF8.GetBytes(PrivateKey)));
+            PrivateKeyFile privateKeyFile;
+            if (!PrivateKey.StartsWith("-----BEGIN OPENSSH PRIVATE KEY-----"))
+            {
+                var privateKeyPath = PrivateKey.Trim();
+                if (privateKeyPath.StartsWith("~/"))
+                {
+                    privateKeyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),privateKeyPath.Substring(2));
+                }
 
+                privateKeyFile = new PrivateKeyFile(File.OpenRead(Path.GetFullPath(privateKeyPath)));
+            }
+            else
+            {
+                privateKeyFile = new PrivateKeyFile(new MemoryStream(Encoding.UTF8.GetBytes(PrivateKey)));
+            }
+            
             var connectionInfo = new ConnectionInfo(HostName,
                 SshPort,
                 Username,
