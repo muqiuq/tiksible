@@ -33,8 +33,10 @@ namespace Tiksible.Handler
         public void AddCredHostsDefaultArgument(Command initCommand, out Option<string> credOption
             , out Option<string> hostsOption, out Option<bool> debugOption, out Option<string> filterOption)
         {
+            var credentialsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), GlobalConstants.DefaultCredentialsFilename);
+
             credOption = new Option<string>(new string[]{"-c", "--credentials"},
-                () => GlobalConstants.DefaultCredentialsFilename, "path to credentials yaml file");
+                () => credentialsPath, "path to credentials yaml file");
             hostsOption = new Option<string>(new string[] { "-h", "--hosts" },
                 () => GlobalConstants.DefaultHostsFileName, "path to hosts yaml file");
 

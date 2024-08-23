@@ -11,7 +11,7 @@ namespace Tiksible
 
         public const string DefaultHostsFileName = "hosts.yaml";
 
-        public const string DefaultCredentialsFilename = "credentials.yaml";
+        public const string DefaultCredentialsFilename = ".tiksible.cred.yaml";
 
     }
 }
