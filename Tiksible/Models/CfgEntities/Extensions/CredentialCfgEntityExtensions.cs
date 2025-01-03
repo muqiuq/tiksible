@@ -13,16 +13,16 @@ namespace Tiksible.Models.CfgEntities.Extensions
         {
             if (!string.IsNullOrEmpty(credential.PrivateKey) && !string.IsNullOrEmpty(credential.Password))
             {
-                return SshConnectionInfoFactory.CreateCombinedConnectionInfo(host.Address, credential.Username, credential.Password,credential.PrivateKey, host.SshPort);
+                return SshConnectionInfoFactory.CreateCombinedConnectionInfo(host.Address, credential.Username, credential.Password,credential.PrivateKey, host.SshPort, credential.SshOnly);
             }
 
             if (!string.IsNullOrEmpty(credential.PrivateKey))
             {
-                return SshConnectionInfoFactory.CreatePubKeyConnectionInfo(host.Address, credential.Username, credential.PrivateKey, host.SshPort);
+                return SshConnectionInfoFactory.CreatePubKeyConnectionInfo(host.Address, credential.Username, credential.PrivateKey, host.SshPort, credential.SshOnly);
             }
             else if (!string.IsNullOrEmpty(credential.Password))
             {
-                return SshConnectionInfoFactory.CreateUserNamePasswordConnectionInfo(host.Address, credential.Username, credential.Password, host.SshPort);
+                return SshConnectionInfoFactory.CreateUserNamePasswordConnectionInfo(host.Address, credential.Username, credential.Password, host.SshPort, credential.SshOnly);
             }
 
             throw new InvalidOperationException("Credential must have either a Password or a PrivateKey or both.");

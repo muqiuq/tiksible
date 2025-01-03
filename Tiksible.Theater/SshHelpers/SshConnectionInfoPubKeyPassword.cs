@@ -17,13 +17,16 @@ namespace Tiksible.Theater.SshHelpers
 
         public string Password { get; set; }
 
-        internal SshConnectionInfoPubKeyPassword(string hostName, string username, string privateKey, string password, int sshPort)
+        public bool SshOnly { get; set; }
+
+        internal SshConnectionInfoPubKeyPassword(string hostName, string username, string privateKey, string password, int sshPort, bool sshOnly)
         {
             HostName = hostName;
             Username = username;
             PrivateKey = privateKey;
             Password = password;
             SshPort = sshPort;
+            SshOnly = sshOnly;
         }
 
         public ConnectionInfo GetConnectionInfo()

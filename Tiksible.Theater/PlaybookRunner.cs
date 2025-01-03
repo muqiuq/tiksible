@@ -37,7 +37,10 @@ namespace Tiksible.Theater
             using (var sftpClient = new SftpClient(connectionInfo))
             {
                 client.Connect();
-                sftpClient.Connect();
+                if(!sshConnectionInfo.SshOnly)
+                {
+                    sftpClient.Connect();
+                }
                 logger.LogDebug($"Executing Playbook {playbook.GetType().Name} on {sshConnectionInfo}");
 
                 foreach (var order in playbook.GetExecutionOrders())

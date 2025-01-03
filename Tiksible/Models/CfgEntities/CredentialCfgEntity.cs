@@ -15,5 +15,8 @@ namespace Tiksible.Models.CfgEntities
         public string? Password { get; set; }
         public string? PrivateKey { get; set; }
 
+        public bool SshOnly { get; set; } = false;
+
+        public Dictionary<string, object> Params { get; set; }
     }
 }

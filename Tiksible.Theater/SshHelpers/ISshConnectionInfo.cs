@@ -15,6 +15,8 @@ namespace Tiksible.Theater.SshHelpers
 
         public string Username { get; set; }
 
+        public bool SshOnly { get; set; }
+
         public ConnectionInfo GetConnectionInfo();
 
     }
