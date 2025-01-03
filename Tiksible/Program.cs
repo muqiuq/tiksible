@@ -18,6 +18,7 @@ namespace Tiksible
                     (new InitHandler(configStorage)).GetCommand(),
                     new BackupHandler(configStorage).GetCommand(),
                     new RunHandler(configStorage).GetCommand(),
+                    new RunsHandler(configStorage).GetCommand(),
                     new DiffHandler(configStorage).GetCommand(),
                     new ApplyHandler(configStorage).GetCommand(),
                     new InstallSshPubKeyHandler(configStorage).GetCommand(),
