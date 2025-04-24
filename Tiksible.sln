@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tiksible.Lib", "Tiksible.Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevConsole", "DevConsole\DevConsole.csproj", "{D7E6E863-FAE7-4E0B-9C86-90599116567C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiksible.ObjectGenerator", "Tiksible.ObjectGenerator\Tiksible.ObjectGenerator.csproj", "{94F33AB8-C6A0-4602-A287-E14968F7E46C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +39,6 @@ Global
 		{D7E6E863-FAE7-4E0B-9C86-90599116567C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7E6E863-FAE7-4E0B-9C86-90599116567C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7E6E863-FAE7-4E0B-9C86-90599116567C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94F33AB8-C6A0-4602-A287-E14968F7E46C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94F33AB8-C6A0-4602-A287-E14968F7E46C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94F33AB8-C6A0-4602-A287-E14968F7E46C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94F33AB8-C6A0-4602-A287-E14968F7E46C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
