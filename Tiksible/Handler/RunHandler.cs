@@ -24,17 +24,20 @@ namespace Tiksible.Handler
             var cmdArg = new Argument<string>("cmd", "command to run");
             runCommand.AddArgument(cmdArg);
 
+
+            AddOutputDefaultOptions(runCommand, out var outputOption, out var overwriteOutputOption);
+
             AddCredHostsDefaultArgument(runCommand, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
-            runCommand.SetHandler(async (string cmd, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
+            runCommand.SetHandler(async (string cmd, string? output, bool overwriteOutput, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
             {
-                await HandleRun(cmd, credentialsFileName, hostsFileName, debug, hostFilter);
-            }, cmdArg, credOption, hostsOption, debugOption, hostFilterOption);
+                await HandleRun(cmd, output, overwriteOutput,  credentialsFileName, hostsFileName, debug, hostFilter);
+            }, cmdArg, outputOption, overwriteOutputOption, credOption, hostsOption, debugOption, hostFilterOption);
 
             return runCommand;
         }
 
-        private async Task HandleRun(string cmd, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
+        private async Task HandleRun(string cmd, string? outputPath, bool overwriteOutput, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             CheckCredentialsForAllHosts();
@@ -42,14 +45,30 @@ namespace Tiksible.Handler
             foreach (var host in Hosts.Hosts)
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RUN @ {host.Name}"));
-                
+        
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 var runPlaybook = RunPlaybook(conInfo, new RunSingleCmdPlaybook(cmd));
-                
+        
                 ConsoleOutputHelper.PrintStatusLine($"{cmd}", runPlaybook.IsSuccess());
                 Console.WriteLine();
-                Console.WriteLine(runPlaybook.Artifacts[RunSingleCmdPlaybook.OutputArtifactName]);
+        
+                var output = runPlaybook.Artifacts[RunSingleCmdPlaybook.OutputArtifactName];
+                Console.WriteLine(output);
+
+                if (!string.IsNullOrEmpty(outputPath))
+                {
+                    var originalOutputPath = outputPath;
+                    int counter = 0;
+                    while (File.Exists(outputPath) && !overwriteOutput)
+                    {
+                        outputPath = $"{originalOutputPath}.{counter}";
+                        counter++;
+                        if (counter > 10000) throw new InvalidDataException("Cannot find non existent output file name");
+                    }
+                    await File.WriteAllTextAsync(outputPath, output);
+                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"Wrote output to {outputPath}"));
+                }
 
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"FINISHED RUN @ {host.Name}"));
             }
