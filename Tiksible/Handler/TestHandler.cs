@@ -28,25 +28,27 @@ namespace Tiksible.Handler
 
             AddCredHostsDefaultArgument(cmd, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
-            cmd.SetHandler(async (credentialsFileName, hostsFileName, debug, hostFilter) =>
-            {
-                await HandleTest(credentialsFileName, hostsFileName, debug, hostFilter);
-            }, credOption, hostsOption, debugOption, hostFilterOption);
-
+            cmd.SetHandler(HandleTest, credOption, hostsOption, debugOption, hostFilterOption);
+            
             return cmd;
         }
 
-        private async Task HandleTest(string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
+        private async Task<int> HandleTest(string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             CheckCredentialsForAllHosts();
 
+            var numberOfFailures = 0;
+            
             foreach (var host in Hosts.Hosts)
             {
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
-                
-                ConsoleOutputHelper.PrintStatusLine($"{host.Name}", SshConnectionTestService.TestConnection(conInfo));
+                var conStatus = SshConnectionTestService.TestConnection(conInfo);
+                if (!conStatus) numberOfFailures++;
+                ConsoleOutputHelper.PrintStatusLine($"{host.Name}", conStatus);
             }
+
+            return numberOfFailures;
         }
     }
 }

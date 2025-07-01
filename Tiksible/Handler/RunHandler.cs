@@ -29,19 +29,19 @@ namespace Tiksible.Handler
 
             AddCredHostsDefaultArgument(runCommand, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
-            runCommand.SetHandler(async (string cmd, string? output, bool overwriteOutput, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
-            {
-                await HandleRun(cmd, output, overwriteOutput,  credentialsFileName, hostsFileName, debug, hostFilter);
-            }, cmdArg, outputOption, overwriteOutputOption, credOption, hostsOption, debugOption, hostFilterOption);
-
+            runCommand.SetHandler(HandleRun, cmdArg, outputOption, overwriteOutputOption, credOption, hostsOption,
+                debugOption, hostFilterOption);
+            
             return runCommand;
         }
 
-        private async Task HandleRun(string cmd, string? outputPath, bool overwriteOutput, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
+        private async Task<int> HandleRun(string cmd, string? outputPath, bool overwriteOutput, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             CheckCredentialsForAllHosts();
 
+            var isSuccess = true;
+            
             foreach (var host in Hosts.Hosts)
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RUN @ {host.Name}"));
@@ -49,7 +49,9 @@ namespace Tiksible.Handler
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 var runPlaybook = RunPlaybook(conInfo, new RunSingleCmdPlaybook(cmd));
-        
+
+                if (!runPlaybook.IsSuccess()) isSuccess = false;
+                
                 ConsoleOutputHelper.PrintStatusLine($"{cmd}", runPlaybook.IsSuccess());
                 Console.WriteLine();
         
@@ -72,6 +74,8 @@ namespace Tiksible.Handler
 
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"FINISHED RUN @ {host.Name}"));
             }
+
+            return isSuccess ? 0 : 1;
         }
     }
 }

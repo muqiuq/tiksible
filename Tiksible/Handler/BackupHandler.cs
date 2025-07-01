@@ -30,11 +30,9 @@ namespace Tiksible.Handler
 
             AddCredHostsDefaultArgument(backupCommand, out var credOption, out var hostsOption, out var debugOption, out var hostFilterOption);
 
-            backupCommand.SetHandler(async (outputFolder, credentialsFileName, hostsFileName, debug, hostFilter) =>
-            {
-                await HandleBackup(outputFolder, credentialsFileName, hostsFileName, debug, hostFilter);
-            }, outputFolderOption, credOption, hostsOption, debugOption, hostFilterOption);
-
+            backupCommand.SetHandler(HandleBackup, outputFolderOption, credOption, hostsOption, debugOption,
+                hostFilterOption);
+            
             return backupCommand;
         }
 

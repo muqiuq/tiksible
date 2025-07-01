@@ -40,16 +40,14 @@ namespace Tiksible.Handler
 
             AddCredHostsDefaultArgument(applyCommand, out var credOption, out var hostsOption, out var debugOption, out var filterOption);
 
-            applyCommand.SetHandler(async (string rscFilename, bool write, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
-            {
-                await HandleApply(rscFilename, write, credentialsFileName, hostsFileName, debug, hostFilter);
-            }, rscFilenameArg, writeOption, credOption, hostsOption, debugOption, filterOption);
-
+            applyCommand.SetHandler(HandleApply, rscFilenameArg, writeOption, credOption, hostsOption, debugOption,
+                filterOption);
+            
             return applyCommand;
         }
 
 
-        private async Task HandleApply(string rscFilename, bool write, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
+        private async Task<int> HandleApply(string rscFilename, bool write, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             CheckCredentialsForAllHosts();
@@ -64,6 +62,8 @@ namespace Tiksible.Handler
             
             var template = Template.Parse(templateFileContent);
 
+            var isSuccess = true;
+            
             foreach (var host in Hosts.Hosts)
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"APPLY @ {host.Name}"));
@@ -94,6 +94,8 @@ namespace Tiksible.Handler
 
                     playbookRunner.Run();
 
+                    if (!playbookRunner.IsSuccess()) isSuccess = false;
+                    
                     ConsoleOutputHelper.PrintStatusLine($"Apply {rscFilename} @ {host.Name}", playbookRunner.IsSuccess());
 
                     Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"OUTPUT", '-'));
@@ -101,7 +103,9 @@ namespace Tiksible.Handler
                 }
 
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END APPLY @ {host.Name}"));
+
             }
+            return isSuccess ? 0 : 1;
         }
     }
 }

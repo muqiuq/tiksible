@@ -31,7 +31,7 @@ namespace Tiksible
             catch (UserArgumentErrorException ex)
             {
                 Console.WriteLine(ex.Message);
-                return 1;
+                return 254;
             }
         }
     }
