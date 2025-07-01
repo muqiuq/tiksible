@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Scriban;
+using Scriban.Parsing;
+using Scriban.Runtime;
 using Tiksible.Exceptions;
+using Tiksible.Extensions;
 using Tiksible.Helpers;
 using Tiksible.Models.CfgEntities.Extensions;
 using Tiksible.Services;
@@ -58,13 +61,21 @@ namespace Tiksible.Handler
 
             var templateFileContent = await File.ReadAllTextAsync(rscFilename);
 
+            
             var template = Template.Parse(templateFileContent);
 
             foreach (var host in Hosts.Hosts)
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"APPLY @ {host.Name}"));
 
-                var goalRscFileRaw = template.Render(new { Host = host, Credentials = host.GetCredentials(Credentials) });
+                var templateContext = new TemplateContext();
+                templateContext.TemplateLoader = new ScibanTemplateLoader();
+                templateContext.PushSourceFile(Path.GetFullPath(rscFilename));
+                var so = new ScriptObject();
+                so.Import(new { Host = host, Credentials = host.GetCredentials(Credentials)});
+                templateContext.PushGlobal((so));
+                
+                var goalRscFileRaw = template.Render(templateContext);
 
                 if (debug)
                 {
