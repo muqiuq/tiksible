@@ -49,7 +49,7 @@ namespace Tiksible.Handler
             installedVersion = null;
             latestVersion = null;
             var playbookRunnerCheckVersion = new PlaybookRunner(conInfo,
-                new RunSingleCmdPlaybook($"/system/package/update/check-for-updates"));
+                new RunSingleCmdPlaybook($"/system/package/update/check-for-updates"), Pool);
 
             playbookRunnerCheckVersion.Run();
 
@@ -104,7 +104,7 @@ namespace Tiksible.Handler
 
                         if (latestVersion != installedVersion && write)
                         {
-                            var playbookRunner = new PlaybookRunner(conInfo, new RunSingleCmdPlaybook($"/system/package/update/install"));
+                            var playbookRunner = new PlaybookRunner(conInfo, new RunSingleCmdPlaybook($"/system/package/update/install"), Pool);
                             try
                             {
                                 playbookRunner.Run();

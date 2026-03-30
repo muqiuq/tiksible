@@ -17,13 +17,16 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Tiksible.Handler
 {
-    public abstract class BaseHandler
+    public abstract class BaseHandler : IDisposable
     {
         protected readonly ConfigStorage configStorage;
 
         protected CredentialsCfgEntity Credentials;
 
         protected HostsCfgEntity Hosts;
+
+        private SshConnectionPool _pool;
+        protected SshConnectionPool Pool => _pool ??= new SshConnectionPool();
 
         public BaseHandler(ConfigStorage configStorage)
         {
@@ -103,7 +106,7 @@ namespace Tiksible.Handler
 
         public PlaybookRunner RunPlaybook(ISshConnectionInfo conInfo, IPlaybook playbook, bool hardFail = false) 
         {
-            var playbookRunner = new PlaybookRunner(conInfo, playbook);
+            var playbookRunner = new PlaybookRunner(conInfo, playbook, Pool);
 
             playbookRunner.Run();
 
@@ -132,6 +135,12 @@ namespace Tiksible.Handler
                     throw new UserArgumentErrorException($"No credentials found for {host.Name}");
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _pool?.Dispose();
+            _pool = null;
         }
     }
 }

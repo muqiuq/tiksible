@@ -11,21 +11,25 @@ namespace Tiksible
         {
             var configStorage = ConfigStorage.CreateOrLoad();
 
+            var handlers = new BaseHandler[]
+            {
+                new InitHandler(configStorage),
+                new BackupHandler(configStorage),
+                new RunHandler(configStorage),
+                new RunsHandler(configStorage),
+                new DiffHandler(configStorage),
+                new ApplyHandler(configStorage),
+                new InstallSshPubKeyHandler(configStorage),
+                new UpdateHandler(configStorage),
+                new TestHandler(configStorage),
+                new VlanHandler(configStorage),
+            };
+
             try
             {
-                var rootCommand = new RootCommand("Tiksible - Automation for MikroTik")
-                {
-                    (new InitHandler(configStorage)).GetCommand(),
-                    new BackupHandler(configStorage).GetCommand(),
-                    new RunHandler(configStorage).GetCommand(),
-                    new RunsHandler(configStorage).GetCommand(),
-                    new DiffHandler(configStorage).GetCommand(),
-                    new ApplyHandler(configStorage).GetCommand(),
-                    new InstallSshPubKeyHandler(configStorage).GetCommand(),
-                    new UpdateHandler(configStorage).GetCommand(),
-                    new TestHandler(configStorage).GetCommand(),
-                    new VlanHandler(configStorage).GetCommand()
-                };
+                var rootCommand = new RootCommand("Tiksible - Automation for MikroTik");
+                foreach (var h in handlers)
+                    rootCommand.Add(((IHandler)h).GetCommand());
 
                 return rootCommand.InvokeAsync(args).Result;
             }
@@ -33,6 +37,11 @@ namespace Tiksible
             {
                 Console.WriteLine(ex.Message);
                 return 254;
+            }
+            finally
+            {
+                foreach (var h in handlers)
+                    h.Dispose();
             }
         }
     }

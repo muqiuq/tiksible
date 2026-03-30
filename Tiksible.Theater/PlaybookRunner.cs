@@ -14,6 +14,7 @@ namespace Tiksible.Theater
     {
         private readonly ISshConnectionInfo sshConnectionInfo;
         private readonly IPlaybook playbook;
+        private readonly SshConnectionPool pool;
 
         private bool? wasSuccessfull = null;
 
@@ -23,43 +24,33 @@ namespace Tiksible.Theater
 
         public Dictionary<string, string> Artifacts = new Dictionary<string, string>();
 
-        public PlaybookRunner(ISshConnectionInfo sshConnection, IPlaybook playbook)
+        public PlaybookRunner(ISshConnectionInfo sshConnection, IPlaybook playbook, SshConnectionPool pool)
         {
             this.sshConnectionInfo = sshConnection;
             this.playbook = playbook;
+            this.pool = pool;
         }
 
         public void Run()
         {
-            var connectionInfo = sshConnectionInfo.GetConnectionInfo();   
+            var (client, sftpClient) = pool.GetOrOpen(sshConnectionInfo);
+            logger.LogDebug($"Executing Playbook {playbook.GetType().Name} on {sshConnectionInfo}");
 
-            using (var client = new SshClient(connectionInfo))
-            using (var sftpClient = new SftpClient(connectionInfo))
+            foreach (var order in playbook.GetExecutionOrders())
             {
-                client.Connect();
-                if(!sshConnectionInfo.SshOnly)
-                {
-                    sftpClient.Connect();
-                }
-                logger.LogDebug($"Executing Playbook {playbook.GetType().Name} on {sshConnectionInfo}");
+                if (order.ExecutionCondition != null && !Execute(client, sftpClient, order.ExecutionCondition, "Condition")) continue;
 
-                foreach (var order in playbook.GetExecutionOrders())
-                {
-                    
-                    if (order.ExecutionCondition != null && !Execute(client, sftpClient, order.ExecutionCondition, "Condition")) continue;
+                wasSuccessfull = false;
+                if (order.PreCheck != null && !Execute(client, sftpClient, order.PreCheck, "PreCheck")) break;
+                if (order.PreCheck != null) order.PreCheck.Executed = true;
 
-                    wasSuccessfull = false;
-                    if (order.PreCheck != null && !Execute(client, sftpClient, order.PreCheck, "PreCheck")) break;
-                    if (order.PreCheck != null) order.PreCheck.Executed = true;
-                    
-                    if (!Execute(client, sftpClient, order.ExecutionOrder, "ExecutionOrder")) break;
-                    order.ExecutionOrder.Executed = true;
+                if (!Execute(client, sftpClient, order.ExecutionOrder, "ExecutionOrder")) break;
+                order.ExecutionOrder.Executed = true;
 
-                    if (order.PostCheck != null && !Execute(client, sftpClient, order.PostCheck, "PostCheck")) break;
-                    if (order.PostCheck != null) order.PostCheck.Executed = true;
-                    
-                    wasSuccessfull = true;
-                }
+                if (order.PostCheck != null && !Execute(client, sftpClient, order.PostCheck, "PostCheck")) break;
+                if (order.PostCheck != null) order.PostCheck.Executed = true;
+
+                wasSuccessfull = true;
             }
         }
 

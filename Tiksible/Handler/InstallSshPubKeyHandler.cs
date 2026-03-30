@@ -70,7 +70,7 @@ namespace Tiksible.Handler
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
                 var playbookRunnerCheckKey = new PlaybookRunner(conInfo,
-                    new RunSingleCmdPlaybook($":put [:len [/user ssh-keys find key-owner=\"{publicKeyName}\"]]"));
+                    new RunSingleCmdPlaybook($":put [:len [/user ssh-keys find key-owner=\"{publicKeyName}\"]]"), Pool);
 
                 playbookRunnerCheckKey.Run();
 
@@ -85,7 +85,7 @@ namespace Tiksible.Handler
                 }
                 else
                 {
-                    var playbookRunner = new PlaybookRunner(conInfo, new InstallSshPubKeyPlaybook(username));
+                    var playbookRunner = new PlaybookRunner(conInfo, new InstallSshPubKeyPlaybook(username), Pool);
 
                     playbookRunner.Files.Add(InstallSshPubKeyPlaybook.FileName, Encoding.UTF8.GetBytes(publicKeyFile));
 

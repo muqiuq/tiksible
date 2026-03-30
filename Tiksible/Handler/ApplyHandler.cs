@@ -90,7 +90,7 @@ namespace Tiksible.Handler
                 {
                     var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
-                    var playbookRunner = new PlaybookRunner(conInfo, new RunRscScriptPlaybook());
+                    var playbookRunner = new PlaybookRunner(conInfo, new RunRscScriptPlaybook(), Pool);
 
                     playbookRunner.Files.Add(RunRscScriptPlaybook.FileName, Encoding.UTF8.GetBytes(goalRscFileRaw));
 
