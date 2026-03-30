@@ -102,8 +102,8 @@ namespace Tiksible.Services
                 }
                 else
                 {
-                    var currentTagged   = SortPortList(current.Properties.GetValueOrDefault("tagged", ""));
-                    var currentUntagged = SortPortList(current.Properties.GetValueOrDefault("untagged", ""));
+                    var currentTagged   = SortPortList(NormalizeRosListValue(current.Properties.GetValueOrDefault("tagged", "")));
+                    var currentUntagged = SortPortList(NormalizeRosListValue(current.Properties.GetValueOrDefault("untagged", "")));
                     if (currentTagged != taggedStr || currentUntagged != untaggedStr)
                         delta.BridgeVlanSets.Add(BuildVlanSetCmd(bridge, vlanId, taggedStr, untaggedStr));
                 }
@@ -230,9 +230,20 @@ namespace Tiksible.Services
         private static string BuildVlanSetCmd(string bridge, int vlanId, string tagged, string untagged)
         {
             var sb = $"/interface bridge vlan set [find bridge={bridge} vlan-ids={vlanId} !dynamic]";
-            if (!string.IsNullOrEmpty(tagged))   sb += $" tagged={tagged}";
-            if (!string.IsNullOrEmpty(untagged)) sb += $" untagged={untagged}";
+            // Always include both fields. Use quoted empty string to clear a list in RouterOS.
+            sb += $" tagged={RosListValue(tagged)}";
+            sb += $" untagged={RosListValue(untagged)}";
             return sb;
         }
+
+        /// Returns the value suitable for a RouterOS port-list assignment.
+        /// Empty list must be written as \"\" so RouterOS actually clears it.
+        private static string RosListValue(string csv) =>
+            string.IsNullOrEmpty(csv) ? "\"\"" : csv;
+
+        /// Normalises a value read back from a RouterOS export: strips surrounding quotes
+        /// so that \"\" (which RouterOS may export for a cleared list) compares equal to \"\".
+        private static string NormalizeRosListValue(string v) =>
+            v.Length >= 2 && v.StartsWith('"') && v.EndsWith('"') ? v[1..^1] : v;
     }
 }
