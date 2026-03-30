@@ -8,7 +8,7 @@ Tiksible is a lightweight CLI tool designed for managing MikroTik RouterOS devic
  - Backup multiple devices (`/export` and `/system/backup`) with a single line
  - Compare local and remote configurations and apply the differences
  - Set up public key authentication with a single command
- - Manage VLAN configurations via profiles and port assignments, calculate deltas and apply
+ - Manage [VLAN configurations](./docs/vlan.md) via profiles and port assignments, calculate deltas and apply
 
 ## 🧸 Motivation
  - I was looking for a simple, lightweight CLI tool to manage my MikroTik RouterOS devices.

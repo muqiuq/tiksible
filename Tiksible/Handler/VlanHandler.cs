@@ -47,7 +47,7 @@ namespace Tiksible.Handler
             {
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"VLAN @ {host.Name}"));
 
-                var vlanConfig = VlanConfigParser.Parse(host);
+                var vlanConfig = VlanConfigParser.Parse(host, Hosts.Hosts);
                 if (vlanConfig == null)
                 {
                     Console.WriteLine("  No vlan config, skipping.");

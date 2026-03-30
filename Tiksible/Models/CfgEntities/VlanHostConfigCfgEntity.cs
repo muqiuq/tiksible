@@ -4,6 +4,7 @@ namespace Tiksible.Models.CfgEntities
 {
     public class VlanHostConfigCfgEntity
     {
+        public string? Inherit { get; set; }
         public string DefaultPrefix { get; set; } = "ether";
         public int? NumberOfInterfaces { get; set; }
         public List<VlanBridgeCfgEntity> Bridges { get; set; } = new();
