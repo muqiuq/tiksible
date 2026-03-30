@@ -364,3 +364,5 @@ FodyWeavers.xsd
 /Tiksible/hosts.yaml
 /Tiksible/scriptA.rsc
 /Tiksible/scriptB.rsc
+.DS_Store
+Tiksible/VLAN-DIFF-APPLY.rsc
