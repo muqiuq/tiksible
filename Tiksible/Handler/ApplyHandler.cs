@@ -38,16 +38,18 @@ namespace Tiksible.Handler
             );
             applyCommand.AddOption(writeOption);
 
+            AddOutputDefaultOptions(applyCommand, out var outputOption, out var overwriteOutputOption);
+
             AddCredHostsDefaultArgument(applyCommand, out var credOption, out var hostsOption, out var debugOption, out var filterOption);
 
-            applyCommand.SetHandler(HandleApply, rscFilenameArg, writeOption, credOption, hostsOption, debugOption,
+            applyCommand.SetHandler(HandleApply, rscFilenameArg, writeOption, outputOption, overwriteOutputOption, credOption, hostsOption, debugOption,
                 filterOption);
             
             return applyCommand;
         }
 
 
-        private async Task<int> HandleApply(string rscFilename, bool write, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
+        private async Task<int> HandleApply(string rscFilename, bool write, string? outputPath, bool overwriteOutput, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             CheckCredentialsForAllHosts();
@@ -99,7 +101,22 @@ namespace Tiksible.Handler
                     ConsoleOutputHelper.PrintStatusLine($"Apply {rscFilename} @ {host.Name}", playbookRunner.IsSuccess());
 
                     Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"OUTPUT", '-'));
-                    Console.WriteLine(playbookRunner.Artifacts[RunRscScriptPlaybook.Output]);
+                    var output = playbookRunner.Artifacts[RunRscScriptPlaybook.Output];
+                    Console.WriteLine(output);
+
+                    if (!string.IsNullOrEmpty(outputPath))
+                    {
+                        var originalOutputPath = outputPath;
+                        int counter = 0;
+                        while (File.Exists(outputPath) && !overwriteOutput)
+                        {
+                            outputPath = $"{originalOutputPath}.{counter}";
+                            counter++;
+                            if (counter > 10000) throw new InvalidDataException("Cannot find non existent output file name");
+                        }
+                        await File.WriteAllTextAsync(outputPath, output);
+                        Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"Wrote output to {outputPath}"));
+                    }
                 }
 
                 Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END APPLY @ {host.Name}"));
