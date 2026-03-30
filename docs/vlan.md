@@ -99,10 +99,10 @@ Ports can be specified as integers, strings, or ranges:
 
 ```yaml
 assignments:
-  - ports: [1, 2, 3]        # explicit list
-  - ports: [1-8]             # range: ether1 through ether8
-  - ports: [ether9]          # explicit interface name
-  - ports: 1-4               # single range as a string
+  - ports: "1-8"             # range: ether1 through ether8
+  - ports: "1-4"             # same format, shorter range
+  - ports: [1, 2, 3]        # explicit list of port numbers
+  - ports: [ether9, ether10] # explicit interface names
 ```
 
 The default port prefix is `ether`. Override it per-host:
@@ -138,7 +138,7 @@ Use `inherit` to copy bridges, profiles, and assignments from another host defin
           untagged: 40
           tagged: []
       assignments:
-        - ports: [1-2]
+        - ports: "1-2"
           profile: Office
 
 # Second switch — inherits everything and adds its own port assignments
@@ -148,9 +148,9 @@ Use `inherit` to copy bridges, profiles, and assignments from another host defin
     vlan:
       inherit: sw-base           # copies bridges, profiles, assignments from sw-base
       assignments:               # these are appended after the inherited ones
-        - ports: [1-8]
+        - ports: "1-8"
           profile: Office
-        - ports: [9-12]
+        - ports: "9-12"
           profile: Guest
 
 # Third switch — overrides a profile while keeping the rest
@@ -164,7 +164,7 @@ Use `inherit` to copy bridges, profiles, and assignments from another host defin
           untagged: 10
           tagged: [20, 30, 50]   # VLAN 50 added on this switch only
       assignments:
-        - ports: [1-24]
+        - ports: "1-24"
           profile: Office
 ```
 
