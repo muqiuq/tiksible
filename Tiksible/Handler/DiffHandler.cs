@@ -61,15 +61,15 @@ namespace Tiksible.Handler
 
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"DIFF @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"DIFF @ {host.Name}"));
 
                 var goalRscFileRaw = template.Render(new { Host = host, Credentials = host.GetCredentials(Credentials) });
 
                 if (debug)
                 {
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RENDERED RSC FILE for {host.Name}"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"RENDERED RSC FILE for {host.Name}"));
                     Console.WriteLine(goalRscFileRaw);
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END"));
                 }
                 
 
@@ -87,7 +87,7 @@ namespace Tiksible.Handler
 
                 var comparisonResult = isRscConfig.Compare(shouldRscConfig);
 
-                foreach (var statement in comparisonResult.MissingStatemenetsOwn)
+                foreach (var statement in comparisonResult.MissingStatementsOwn)
                 {
                     var statementStr = statement.Export();
                     Console.WriteLine(statementStr);
@@ -100,7 +100,7 @@ namespace Tiksible.Handler
 
                 
 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"FINISHED DIFF @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"FINISHED DIFF @ {host.Name}"));
             }
         }
     }

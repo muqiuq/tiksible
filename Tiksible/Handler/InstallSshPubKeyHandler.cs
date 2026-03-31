@@ -65,7 +65,7 @@ namespace Tiksible.Handler
 
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"PUBKEY @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"PUBKEY @ {host.Name}"));
 
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
@@ -93,10 +93,10 @@ namespace Tiksible.Handler
 
                     ConsoleOutputHelper.PrintStatusLine($"Install SSH key for {username} @ {host.Name}", playbookRunner.IsSuccess());
 
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"OUTPUT", '-'));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"OUTPUT", '-'));
                     Console.WriteLine(playbookRunner.Artifacts[RunRscScriptPlaybook.Output]);
                 }
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END PUBKEY @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END PUBKEY @ {host.Name}"));
             }
         }
     }

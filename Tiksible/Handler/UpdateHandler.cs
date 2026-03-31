@@ -83,7 +83,7 @@ namespace Tiksible.Handler
 
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"UPDATE @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"UPDATE @ {host.Name}"));
 
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
@@ -149,7 +149,7 @@ namespace Tiksible.Handler
                     }
                 }
                 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END UPDATE @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END UPDATE @ {host.Name}"));
             }
         }
     }
