@@ -12,12 +12,13 @@ namespace Tiksible.Theater
 {
     public class SshConnectionTestService
     {
+        public const int DefaultTimeoutSeconds = 5;
 
-        public static bool TestConnection(ISshConnectionInfo sshConnectionInfo)
+        public static bool TestConnection(ISshConnectionInfo sshConnectionInfo, TimeSpan? timeout = null)
         {
             var connectionInfo = sshConnectionInfo.GetConnectionInfo();
 
-            connectionInfo.Timeout = TimeSpan.FromSeconds(5);
+            connectionInfo.Timeout = timeout ?? TimeSpan.FromSeconds(DefaultTimeoutSeconds);
             try
             {
                 using (var client = new SshClient(connectionInfo))

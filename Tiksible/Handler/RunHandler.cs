@@ -66,7 +66,7 @@ namespace Tiksible.Handler
                     {
                         outputPath = $"{originalOutputPath}.{counter}";
                         counter++;
-                        if (counter > 10000) throw new InvalidDataException("Cannot find non existent output file name");
+                        if (counter > GlobalConstants.MaxOutputFileCounter) throw new InvalidDataException("Cannot find non existent output file name");
                     }
                     await File.WriteAllTextAsync(outputPath, output);
                     Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"Wrote output to {outputPath}"));

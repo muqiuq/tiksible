@@ -13,5 +13,7 @@ namespace Tiksible
 
         public const string DefaultCredentialsFilename = ".tiksible.cred.yaml";
 
+        public const int MaxOutputFileCounter = 10000;
+
     }
 }
