@@ -91,10 +91,10 @@ namespace Tiksible.Tests
 
             var result = statementLeft.Compare(statementRight);
 
-            Assert.AreEqual(1, result.MissingStatemenetsOwn.Count);
-            Assert.AreEqual(0, result.MissingStatemenetsOther.Count);
+            Assert.AreEqual(1, result.MissingStatementsOwn.Count);
+            Assert.AreEqual(0, result.MissingStatementsOther.Count);
 
-            Assert.AreEqual(TestData.MissingLineTest1, result.MissingStatemenetsOwn.FirstOrDefault()?.Export());
+            Assert.AreEqual(TestData.MissingLineTest1, result.MissingStatementsOwn.FirstOrDefault()?.Export());
         }
 
         [TestMethod]
@@ -105,10 +105,10 @@ namespace Tiksible.Tests
 
             var result = statementLeft.Compare(statementRight);
 
-            Assert.AreEqual(1, result.MissingStatemenetsOwn.Count);
-            Assert.AreEqual(0, result.MissingStatemenetsOther.Count);
+            Assert.AreEqual(1, result.MissingStatementsOwn.Count);
+            Assert.AreEqual(0, result.MissingStatementsOther.Count);
 
-            Assert.AreEqual(TestData.MissingLineTest2, result.MissingStatemenetsOwn.FirstOrDefault()?.Export());
+            Assert.AreEqual(TestData.MissingLineTest2, result.MissingStatementsOwn.FirstOrDefault()?.Export());
         }
     }
 }

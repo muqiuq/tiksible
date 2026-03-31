@@ -9,7 +9,7 @@ namespace Tiksible.Helpers
     public static class ConsoleOutputHelper
     {
 
-        public static string MakeDeviderLine(string input, char character = '=')
+        public static string MakeDividerLine(string input, char character = '=')
         {
             int totalWidth = Console.WindowWidth;
             int inputLength = input.Length + 5; // 3 for "=== " and 2 for " "

@@ -68,7 +68,7 @@ namespace Tiksible.Handler
             
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"APPLY @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"APPLY @ {host.Name}"));
 
                 var templateContext = new TemplateContext();
                 templateContext.TemplateLoader = new ScibanTemplateLoader();
@@ -81,9 +81,9 @@ namespace Tiksible.Handler
 
                 if (debug)
                 {
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RENDERED RSC FILE for {host.Name}"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"RENDERED RSC FILE for {host.Name}"));
                     Console.WriteLine(goalRscFileRaw);
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END"));
                 }
 
                 if (write)
@@ -100,7 +100,7 @@ namespace Tiksible.Handler
                     
                     ConsoleOutputHelper.PrintStatusLine($"Apply {rscFilename} @ {host.Name}", playbookRunner.IsSuccess());
 
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"OUTPUT", '-'));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"OUTPUT", '-'));
                     var output = playbookRunner.Artifacts[RunRscScriptPlaybook.Output];
                     Console.WriteLine(output);
 
@@ -115,11 +115,11 @@ namespace Tiksible.Handler
                             if (counter > 10000) throw new InvalidDataException("Cannot find non existent output file name");
                         }
                         await File.WriteAllTextAsync(outputPath, output);
-                        Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"Wrote output to {outputPath}"));
+                        Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"Wrote output to {outputPath}"));
                     }
                 }
 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END APPLY @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END APPLY @ {host.Name}"));
 
             }
             return isSuccess ? 0 : 1;

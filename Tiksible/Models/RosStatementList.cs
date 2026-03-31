@@ -12,8 +12,8 @@ namespace Tiksible.Models
         public RosComparisonResult Compare(RosStatementList other)
         {
             RosComparisonResult result = new RosComparisonResult();
-            result.MissingStatemenetsOther = getMissingStatements(this, other);
-            result.MissingStatemenetsOwn = getMissingStatements(other, this);
+            result.MissingStatementsOther = getMissingStatements(this, other);
+            result.MissingStatementsOwn = getMissingStatements(other, this);
             return result;
         }
 

@@ -45,13 +45,13 @@ namespace Tiksible.Handler
 
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"VLAN @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"VLAN @ {host.Name}"));
 
                 var vlanConfig = VlanConfigParser.Parse(host, Hosts.Hosts);
                 if (vlanConfig == null)
                 {
                     Console.WriteLine("  No vlan config, skipping.");
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END VLAN @ {host.Name}"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END VLAN @ {host.Name}"));
                     continue;
                 }
 
@@ -88,7 +88,7 @@ namespace Tiksible.Handler
                     }
                 }
 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END VLAN @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END VLAN @ {host.Name}"));
             }
 
             await Task.CompletedTask;
