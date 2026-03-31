@@ -90,9 +90,10 @@ namespace Tiksible.Handler
                 {
                     var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
-                    var playbookRunner = new PlaybookRunner(conInfo, new RunRscScriptPlaybook(), Pool);
+                    var rscPlaybook = new RunRscScriptPlaybook();
+                    var playbookRunner = new PlaybookRunner(conInfo, rscPlaybook, Pool);
 
-                    playbookRunner.Files.Add(RunRscScriptPlaybook.FileName, Encoding.UTF8.GetBytes(goalRscFileRaw));
+                    playbookRunner.Files.Add(rscPlaybook.FileName, Encoding.UTF8.GetBytes(goalRscFileRaw));
 
                     playbookRunner.Run();
 
@@ -112,7 +113,7 @@ namespace Tiksible.Handler
                         {
                             outputPath = $"{originalOutputPath}.{counter}";
                             counter++;
-                            if (counter > 10000) throw new InvalidDataException("Cannot find non existent output file name");
+                            if (counter > GlobalConstants.MaxOutputFileCounter) throw new InvalidDataException("Cannot find non existent output file name");
                         }
                         await File.WriteAllTextAsync(outputPath, output);
                         Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"Wrote output to {outputPath}"));
