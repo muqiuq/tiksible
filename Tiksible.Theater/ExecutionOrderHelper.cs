@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Tiksible.Theater
 {
     public static class ExecutionOrderHelper
@@ -34,7 +35,7 @@ namespace Tiksible.Theater
         public static FullExecutionOrder DownloadFile(string fileName)
         {
             return new FullExecutionOrder()
-                //.AddPreCheck(new CommandExectionOrder($":if ([:len [/file find name=\"{fileName}\"]] > 0) do={{:put \"1\"}} else={{:put \"0\"}}", CompareStringFunc("1")))
+                //.AddPreCheck(new CommandExecutionOrder($":if ([:len [/file find name=\"{fileName}\"]] > 0) do={{:put \"1\"}} else={{:put \"0\"}}", CompareStringFunc("1")))
                 .AddOrder(new FileDownloadOrder(fileName));
                 
         }
@@ -42,20 +43,20 @@ namespace Tiksible.Theater
         internal static FullExecutionOrder Export(string artifactName)
         {
             return new FullExecutionOrder()
-                .AddOrder(new CommandExectionOrder($"/export show-sensitive", artifactName: artifactName));
+                .AddOrder(new CommandExecutionOrder($"/export show-sensitive", artifactName: artifactName));
         }
 
         internal static FullExecutionOrder Cmd(string cmd)
         {
             return new FullExecutionOrder()
-                .AddOrder(new CommandExectionOrder(cmd));
+                .AddOrder(new CommandExecutionOrder(cmd));
         }
 
         internal static FullExecutionOrder DeleteFile(string path)
         {
             return new FullExecutionOrder()
-                .AddOrder(new CommandExectionOrder($"/file/remove {path}"))
-                .AddPostCheck(new CommandExectionOrder(
+                .AddOrder(new CommandExecutionOrder($"/file/remove {path}"))
+                .AddPostCheck(new CommandExecutionOrder(
                     $":if ([:len [/file find name=\"{path}\"]] > 0) do={{:put \"1\"}} else={{:put \"0\"}}",
                     CompareStringFunc("0")));
         }
@@ -69,7 +70,7 @@ namespace Tiksible.Theater
         internal static FullExecutionOrder CmdWithOutput(string cmd, string artifactName)
         {
             return new FullExecutionOrder()
-                .AddOrder(new CommandExectionOrder(cmd, artifactName: artifactName));
+                .AddOrder(new CommandExecutionOrder(cmd, artifactName: artifactName));
         }
 
 

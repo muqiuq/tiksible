@@ -10,15 +10,23 @@ namespace Tiksible.Theater.Playbooks
     {
         List<FullExecutionOrder> orderList = new List<FullExecutionOrder>();
 
-        public const string FileName = "tmp-tiksible-script.rsc";
+        public const string DefaultFileName = "tmp-tiksible-script.rsc";
+        public const int DefaultSleepMs = 1000;
         public const string Output = "output";
 
-        public RunRscScriptPlaybook()
+        public string FileName { get; }
+
+        public RunRscScriptPlaybook() : this(DefaultFileName, DefaultSleepMs)
         {
-            orderList.Add(ExecutionOrderHelper.UploadFile(FileName));
-            orderList.Add(ExecutionOrderHelper.Sleep(1000));
-            orderList.Add(ExecutionOrderHelper.CmdWithOutput($"/import file-name={FileName}", Output));
-            orderList.Add(ExecutionOrderHelper.DeleteFileSFTP(FileName));
+        }
+
+        public RunRscScriptPlaybook(string fileName, int sleepMs = DefaultSleepMs)
+        {
+            FileName = fileName;
+            orderList.Add(ExecutionOrderHelper.UploadFile(fileName));
+            orderList.Add(ExecutionOrderHelper.Sleep(sleepMs));
+            orderList.Add(ExecutionOrderHelper.CmdWithOutput($"/import file-name={fileName}", Output));
+            orderList.Add(ExecutionOrderHelper.DeleteFileSFTP(fileName));
         }
 
         public List<FullExecutionOrder> GetExecutionOrders()

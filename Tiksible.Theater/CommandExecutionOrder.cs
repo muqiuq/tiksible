@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Tiksible.Theater
 {
-    internal class CommandExectionOrder : IExecutionOrder
+    internal class CommandExecutionOrder : IExecutionOrder
     {
         private readonly string command;
         private readonly Func<string, bool> verifyOutputFunc;
         private readonly bool verifyExitStatus;
         private readonly string? artifactName;
 
-        public CommandExectionOrder(string command, Func<string, bool> verifyOutputFunc = null, bool verifyExitStatus = true, string? artifactName = null)
+        public CommandExecutionOrder(string command, Func<string, bool> verifyOutputFunc = null, bool verifyExitStatus = true, string? artifactName = null)
         {
             this.command = command;
             this.verifyOutputFunc = verifyOutputFunc;

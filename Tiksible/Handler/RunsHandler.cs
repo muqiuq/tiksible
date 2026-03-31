@@ -52,7 +52,7 @@ namespace Tiksible.Handler
 
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RUNS @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"RUNS @ {host.Name}"));
 
                 var goalRscFileRaw = template.Render(new { Host = host, Credentials = host.GetCredentials(Credentials) });
 
@@ -70,7 +70,7 @@ namespace Tiksible.Handler
                 
                 Console.WriteLine();
 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"FINISHED RUNS @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"FINISHED RUNS @ {host.Name}"));
             }
         }
     }

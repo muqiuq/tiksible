@@ -34,12 +34,26 @@ namespace Tiksible.Handler
             );
             cmd.AddOption(writeOption);
 
+            var retryCountOption = new Option<int>(
+                "--retry-count",
+                () => 40,
+                "maximum number of connection attempts after reboot during update"
+            );
+            cmd.AddOption(retryCountOption);
+
+            var retryIntervalOption = new Option<int>(
+                "--retry-interval",
+                () => 2000,
+                "interval in milliseconds between connection retries"
+            );
+            cmd.AddOption(retryIntervalOption);
+
             AddCredHostsDefaultArgument(cmd, out var credOption, out var hostsOption, out var debugOption, out var filterOption);
 
-            cmd.SetHandler(async (bool write, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
+            cmd.SetHandler(async (bool write, int retryCount, int retryInterval, string credentialsFileName, string hostsFileName, bool debug, string hostFilter) =>
             {
-                await HandleApply(write, credentialsFileName, hostsFileName, debug, hostFilter);
-            }, writeOption, credOption, hostsOption, debugOption, filterOption);
+                await HandleApply(write, retryCount, retryInterval, credentialsFileName, hostsFileName, debug, hostFilter);
+            }, writeOption, retryCountOption, retryIntervalOption, credOption, hostsOption, debugOption, filterOption);
 
             return cmd;
         }
@@ -76,14 +90,14 @@ namespace Tiksible.Handler
             return true;
         }
 
-        private async Task HandleApply(bool write, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
+        private async Task HandleApply(bool write, int retryCount, int retryInterval, string credentialsFileName, string hostsFileName, bool debug, string hostFilter)
         {
             LoadHostsAndCredentials(credentialsFileName, hostsFileName, hostFilter);
             CheckCredentialsForAllHosts();
 
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"UPDATE @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"UPDATE @ {host.Name}"));
 
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
@@ -119,9 +133,9 @@ namespace Tiksible.Handler
                             bool connectionTestSuccess = false;
                             bool updateSuccess = false;
 
-                            for (int a = 0; a < 40; a++)
+                            for (int a = 0; a < retryCount; a++)
                             {
-                                Thread.Sleep(2000);
+                                Thread.Sleep(retryInterval);
                                 if (SshConnectionTestService.TestConnection(conInfo))
                                 {
                                     connectionTestSuccess = true;
@@ -149,7 +163,7 @@ namespace Tiksible.Handler
                     }
                 }
                 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END UPDATE @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END UPDATE @ {host.Name}"));
             }
         }
     }

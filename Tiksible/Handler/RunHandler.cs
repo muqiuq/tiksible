@@ -44,7 +44,7 @@ namespace Tiksible.Handler
             
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RUN @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"RUN @ {host.Name}"));
         
                 var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
@@ -66,13 +66,13 @@ namespace Tiksible.Handler
                     {
                         outputPath = $"{originalOutputPath}.{counter}";
                         counter++;
-                        if (counter > 10000) throw new InvalidDataException("Cannot find non existent output file name");
+                        if (counter > GlobalConstants.MaxOutputFileCounter) throw new InvalidDataException("Cannot find non existent output file name");
                     }
                     await File.WriteAllTextAsync(outputPath, output);
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"Wrote output to {outputPath}"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"Wrote output to {outputPath}"));
                 }
 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"FINISHED RUN @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"FINISHED RUN @ {host.Name}"));
             }
 
             return isSuccess ? 0 : 1;
