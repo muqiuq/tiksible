@@ -18,9 +18,12 @@ namespace Tiksible.Handler
                 var metadata = asm.GetCustomAttributes<AssemblyMetadataAttribute>();
                 var repoUrl = metadata.FirstOrDefault(a => a.Key == "RepositoryUrl")?.Value ?? "";
                 var authors = metadata.FirstOrDefault(a => a.Key == "Authors")?.Value ?? "";
+                var packageLicenseUrl =  metadata.FirstOrDefault(a => a.Key == "PackageLicenseUrl")?.Value ?? "";
+                var packageLicenseExpression =  metadata.FirstOrDefault(a => a.Key == "PackageLicenseExpression")?.Value ?? "";
                 Console.WriteLine($"tiksible {version}");
                 Console.WriteLine($"Repository: {repoUrl}");
                 Console.WriteLine($"Author:     {authors}");
+                Console.WriteLine($"License:    {packageLicenseExpression} - {packageLicenseUrl}");
             });
             return cmd;
         }
