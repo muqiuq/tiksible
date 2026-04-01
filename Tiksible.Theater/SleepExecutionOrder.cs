@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tiksible.Theater;
-
-namespace GNS3aaS.Theater
+namespace Tiksible.Theater
 {
     public class SleepExecutionOrder : IExecutionOrder
     {

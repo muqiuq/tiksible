@@ -56,7 +56,7 @@ namespace Tiksible.Theater
 
         public bool IsSuccess()
         {
-            if (!wasSuccessfull.HasValue) throw new Exception("Not runned yet");
+            if (!wasSuccessfull.HasValue) throw new Exception("Playbook has not been executed yet");
             return wasSuccessfull!.Value;
         }
 

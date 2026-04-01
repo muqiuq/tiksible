@@ -68,7 +68,7 @@ namespace Tiksible.Handler
             
             foreach (var host in Hosts.Hosts)
             {
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"APPLY @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"APPLY @ {host.Name}"));
 
                 var templateContext = new TemplateContext();
                 templateContext.TemplateLoader = new ScibanTemplateLoader();
@@ -81,18 +81,19 @@ namespace Tiksible.Handler
 
                 if (debug)
                 {
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"RENDERED RSC FILE for {host.Name}"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"RENDERED RSC FILE for {host.Name}"));
                     Console.WriteLine(goalRscFileRaw);
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END"));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END"));
                 }
 
                 if (write)
                 {
                     var conInfo = host.GetCredentials(Credentials)!.GetSshConnectionInfo(host);
 
-                    var playbookRunner = new PlaybookRunner(conInfo, new RunRscScriptPlaybook(), Pool);
+                    var rscPlaybook = new RunRscScriptPlaybook();
+                    var playbookRunner = new PlaybookRunner(conInfo, rscPlaybook, Pool);
 
-                    playbookRunner.Files.Add(RunRscScriptPlaybook.FileName, Encoding.UTF8.GetBytes(goalRscFileRaw));
+                    playbookRunner.Files.Add(rscPlaybook.FileName, Encoding.UTF8.GetBytes(goalRscFileRaw));
 
                     playbookRunner.Run();
 
@@ -100,7 +101,7 @@ namespace Tiksible.Handler
                     
                     ConsoleOutputHelper.PrintStatusLine($"Apply {rscFilename} @ {host.Name}", playbookRunner.IsSuccess());
 
-                    Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"OUTPUT", '-'));
+                    Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"OUTPUT", '-'));
                     var output = playbookRunner.Artifacts[RunRscScriptPlaybook.Output];
                     Console.WriteLine(output);
 
@@ -112,14 +113,14 @@ namespace Tiksible.Handler
                         {
                             outputPath = $"{originalOutputPath}.{counter}";
                             counter++;
-                            if (counter > 10000) throw new InvalidDataException("Cannot find non existent output file name");
+                            if (counter > GlobalConstants.MaxOutputFileCounter) throw new InvalidDataException("Cannot find non existent output file name");
                         }
                         await File.WriteAllTextAsync(outputPath, output);
-                        Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"Wrote output to {outputPath}"));
+                        Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"Wrote output to {outputPath}"));
                     }
                 }
 
-                Console.WriteLine(ConsoleOutputHelper.MakeDeviderLine($"END APPLY @ {host.Name}"));
+                Console.WriteLine(ConsoleOutputHelper.MakeDividerLine($"END APPLY @ {host.Name}"));
 
             }
             return isSuccess ? 0 : 1;

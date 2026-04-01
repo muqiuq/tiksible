@@ -23,6 +23,7 @@ namespace Tiksible
                 new UpdateHandler(configStorage),
                 new TestHandler(configStorage),
                 new VlanHandler(configStorage),
+                new VersionHandler(configStorage),
             };
 
             try
