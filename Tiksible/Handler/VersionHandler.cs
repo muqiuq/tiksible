@@ -13,10 +13,14 @@ namespace Tiksible.Handler
             var cmd = new Command("version", "show tiksible version");
             cmd.SetHandler(() =>
             {
-                var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown";
+                var asm = Assembly.GetExecutingAssembly();
+                var version = asm.GetName().Version?.ToString() ?? "unknown";
+                var metadata = asm.GetCustomAttributes<AssemblyMetadataAttribute>();
+                var repoUrl = metadata.FirstOrDefault(a => a.Key == "RepositoryUrl")?.Value ?? "";
+                var authors = metadata.FirstOrDefault(a => a.Key == "Authors")?.Value ?? "";
                 Console.WriteLine($"tiksible {version}");
-                Console.WriteLine("Repository: https://github.com/muqiuq/tiksible");
-                Console.WriteLine("Author:     Philipp M. Albrecht <philipp@uisa.ch>");
+                Console.WriteLine($"Repository: {repoUrl}");
+                Console.WriteLine($"Author:     {authors}");
             });
             return cmd;
         }
