@@ -28,7 +28,7 @@ namespace Tiksible.Theater.SshHelpers
 
         public ConnectionInfo GetConnectionInfo()
         {
-            var privateKeyFile = new PrivateKeyFile(new MemoryStream(Encoding.UTF8.GetBytes(PrivateKey)));
+            var privateKeyFile = PrivateKeyLoader.Load(PrivateKey);
 
             var connectionInfo = new ConnectionInfo(HostName,
                 SshPort,

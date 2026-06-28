@@ -29,24 +29,11 @@ namespace Tiksible.Theater.SshHelpers
             SshOnly = sshOnly;
         }
 
+
         public ConnectionInfo GetConnectionInfo()
         {
-            PrivateKeyFile privateKeyFile;
-            if (!PrivateKey.StartsWith("-----BEGIN OPENSSH PRIVATE KEY-----"))
-            {
-                var privateKeyPath = PrivateKey.Trim();
-                if (privateKeyPath.StartsWith("~/"))
-                {
-                    privateKeyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),privateKeyPath.Substring(2));
-                }
+            var privateKeyFile = PrivateKeyLoader.Load(PrivateKey);
 
-                privateKeyFile = new PrivateKeyFile(File.OpenRead(Path.GetFullPath(privateKeyPath)));
-            }
-            else
-            {
-                privateKeyFile = new PrivateKeyFile(new MemoryStream(Encoding.UTF8.GetBytes(PrivateKey)));
-            }
-            
             var connectionInfo = new ConnectionInfo(HostName,
                 SshPort,
                 Username,

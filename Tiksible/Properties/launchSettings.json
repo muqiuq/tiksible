@@ -2,7 +2,8 @@
   "profiles": {
     "Tiksible": {
       "commandName": "Project",
-      "commandLineArgs": "test"
+      "commandLineArgs": "backup",
+      "workingDirectory": "/Volumes/Management/Netzwerk Management/tiksible-h62"
     }
   }
 }
